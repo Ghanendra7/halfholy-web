@@ -3,27 +3,19 @@
  * Zero heavy frameworks. Native browser standards for maximum performance.
  */
 
-// Speculation Rules API for instant sub-100ms page transitions
-if (HTMLScriptElement.supports && HTMLScriptElement.supports('speculationrules')) {
-  const specScript = document.createElement('script');
-  specScript.type = 'speculationrules';
-  specScript.textContent = JSON.stringify({
-    prerender: [
-      {
-        source: 'document',
-        where: {
-          and: [
-            { href_matches: '/*\\?*' },
-            { not: { href_matches: '/cart*' } },
-            { not: { href_matches: '/checkout*' } },
-            { not: { href_matches: '/admin*' } }
-          ]
-        },
-        eagerness: 'moderate'
-      }
-    ]
-  });
-  document.head.appendChild(specScript);
+// Fallback hover prefetch for browsers without native Speculation Rules (Firefox / older Safari)
+if (!HTMLScriptElement.supports || !HTMLScriptElement.supports('speculationrules')) {
+  const prefetchedUrls = new Set();
+  document.addEventListener('pointerenter', (e) => {
+    const link = e.target.closest('a[href^="/"]');
+    if (!link || prefetchedUrls.has(link.href)) return;
+    if (link.href.includes('/cart') || link.href.includes('/checkout') || link.href.includes('/admin')) return;
+    prefetchedUrls.add(link.href);
+    const prefetchLink = document.createElement('link');
+    prefetchLink.rel = 'prefetch';
+    prefetchLink.href = link.href;
+    document.head.appendChild(prefetchLink);
+  }, { passive: true, capture: true });
 }
 
 /**
@@ -67,15 +59,17 @@ class CartDrawer extends HTMLElement {
 
   open() {
     this.classList.remove('hidden');
-    // slight delay for transition
+    this.setAttribute('aria-hidden', 'false');
     requestAnimationFrame(() => {
       this.classList.add('active');
       document.body.style.overflow = 'hidden';
+      if (this.closeBtn) this.closeBtn.focus();
     });
   }
 
   close() {
     this.classList.remove('active');
+    this.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
     setTimeout(() => {
       this.classList.add('hidden');

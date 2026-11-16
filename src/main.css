@@ -77,3 +77,30 @@ details summary {
 ::-webkit-scrollbar-thumb:hover {
   background: #A0A0A0;
 }
+
+/* Performance & Cross-Browser Optimizations */
+button, a, input, select, textarea, [role="button"] {
+  touch-action: manipulation;
+}
+
+/* Off-screen rendering boost for long editorial pages */
+.content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 500px;
+}
+
+/* iOS Safari smooth scrolling and overscroll containment */
+cart-drawer [data-cart-items-container] {
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Accessibility: Respect Reduced Motion Preferences */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

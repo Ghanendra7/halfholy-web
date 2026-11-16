@@ -1,4 +1,4 @@
-<section class="w-full bg-[#E6E9EA] hairline-b">
+<section class="w-full bg-[#E6E9EA] hairline-b content-visibility-auto">
   {% if section.settings.heading != blank %}
     <div class="px-6 md:px-8 py-4 hairline-b flex items-center justify-between text-xs font-mono uppercase tracking-widest text-[#777777]">
       <span>{{ section.settings.heading }}</span>
@@ -14,7 +14,8 @@
         {% if block.settings.image != blank %}
           {{ block.settings.image | image_url: width: 1000 | image_tag: 
             class: 'w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-102',
-            loading: 'lazy'
+            loading: 'lazy',
+            decoding: 'async'
           }}
         {% else %}
           <div class="w-full h-full flex flex-col items-center justify-center p-6 text-center text-xs font-mono text-[#888888]">

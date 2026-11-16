@@ -3,7 +3,29 @@
   <head>
     {% render 'meta-tags' %}
 
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdn.shopify.com">
+
     {{ content_for_header }}
+
+    <script type="speculationrules">
+    {
+      "prerender": [
+        {
+          "source": "document",
+          "where": {
+            "and": [
+              { "href_matches": "/*\\?*" },
+              { "not": { "href_matches": "/cart*" } },
+              { "not": { "href_matches": "/checkout*" } },
+              { "not": { "href_matches": "/admin*" } }
+            ]
+          },
+          "eagerness": "moderate"
+        }
+      ]
+    }
+    </script>
 
     {{ 'AntiqueLegacy-Light.otf' | asset_url | preload_tag: as: 'font', type: 'font/otf', crossorigin: 'anonymous' }}
     {{ 'FragmentMono-Regular.ttf' | asset_url | preload_tag: as: 'font', type: 'font/ttf', crossorigin: 'anonymous' }}
