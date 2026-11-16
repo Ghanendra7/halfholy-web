@@ -5,6 +5,10 @@
 
     {{ content_for_header }}
 
+    {{ 'AntiqueLegacy-Light.otf' | asset_url | preload_tag: as: 'font', type: 'font/otf', crossorigin: 'anonymous' }}
+    {{ 'FragmentMono-Regular.ttf' | asset_url | preload_tag: as: 'font', type: 'font/ttf', crossorigin: 'anonymous' }}
+    {{ 'theme.css' | asset_url | stylesheet_tag: preload: true }}
+
     <style>
       @font-face {
         font-family: 'Antique Legacy';
@@ -40,10 +44,14 @@
         --border-color: #CBD0D3;
         --accent-purple: #9022B8;
       }
-    </style>
 
-    <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="{{ 'theme.css' | asset_url }}"></noscript>
+      html, body {
+        background-color: #E6E9EA;
+        color: #0A0A0A;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
 
     <script>
       document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
