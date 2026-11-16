@@ -1,26 +1,26 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-bg: #EFEFEF;
-  --color-brand-surface: #F5F5F5;
+  --color-brand-bg: #E6E9EA;
+  --color-brand-surface: #EFF1F2;
   --color-brand-dark: #0A0A0A;
-  --color-brand-border: #D2D2D2;
-  --color-brand-border-dark: #A5A5A5;
-  --color-brand-purple: #8000FF;
-  --color-brand-purple-hover: #7000E0;
-  --color-brand-muted: #666666;
+  --color-brand-border: #CBD0D3;
+  --color-brand-border-dark: #8E9598;
+  --color-brand-purple: #9022B8;
+  --color-brand-purple-hover: #7E1DA2;
+  --color-brand-muted: #5C6265;
 
   --font-sans: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-mono: "SF Mono", Monaco, Menlo, Consolas, "Courier New", monospace;
-  --font-serif: "Times New Roman", Times, Didot, Georgia, serif;
+  --font-mono: "Fragment Mono", "SF Mono", Monaco, Menlo, Consolas, monospace;
+  --font-serif: "Antique Legacy", "Times New Roman", Times, Didot, Georgia, serif;
 }
 
 /* Custom base styles matching Halfholy brutalist luxury aesthetic */
 :root {
-  --bg-color: #EFEFEF;
+  --bg-color: #E6E9EA;
   --text-color: #0A0A0A;
-  --border-color: #D2D2D2;
-  --accent-purple: #8000FF;
+  --border-color: #CBD0D3;
+  --accent-purple: #9022B8;
 }
 
 html, body {

@@ -3,7 +3,7 @@
   <div data-cart-overlay class="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity duration-300"></div>
 
   <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
-    <div class="w-screen max-w-md bg-[#EFEFEF] text-[#0A0A0A] border-l border-[#D2D2D2] flex flex-col shadow-2xl">
+    <div class="w-screen max-w-md bg-[#E6E9EA] text-[#0A0A0A] border-l border-[#CBD0D3] flex flex-col shadow-2xl">
       <!-- Drawer Header -->
       <div class="p-6 hairline-b flex items-center justify-between">
         <h2 class="text-xs uppercase font-mono tracking-widest">Shopping Bag</h2>
@@ -15,11 +15,11 @@
       <!-- Drawer Content -->
       <div data-cart-items-container class="flex-1 overflow-y-auto p-6 space-y-6">
         {% if cart.item_count > 0 %}
-          <ul class="divide-y divide-[#D2D2D2]">
+          <ul class="divide-y divide-[#CBD0D3]">
             {% for item in cart.items %}
               <li class="py-4 flex gap-4">
                 {% if item.image %}
-                  <div class="w-20 h-24 bg-white border border-[#D2D2D2] shrink-0 p-1">
+                  <div class="w-20 h-24 bg-white border border-[#CBD0D3] shrink-0 p-1">
                     {{ item.image | image_url: width: 200 | image_tag: class: 'w-full h-full object-contain', loading: 'lazy' }}
                   </div>
                 {% endif %}
@@ -54,7 +54,7 @@
         </div>
         <p class="text-[10px] font-mono uppercase text-[#666666]">Shipping & taxes calculated at checkout.</p>
         <form action="{{ routes.cart_url }}" method="post">
-          <button type="submit" name="checkout" class="w-full bg-[#8000FF] hover:bg-[#7000E0] text-white py-3 px-6 text-xs font-mono tracking-widest uppercase transition-colors cursor-pointer">
+          <button type="submit" name="checkout" class="w-full bg-[#9022B8] hover:bg-[#7E1DA2] text-white py-3 px-6 text-xs font-mono tracking-widest uppercase transition-colors cursor-pointer">
             Proceed to Checkout
           </button>
         </form>

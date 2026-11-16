@@ -5,6 +5,43 @@
 
     {{ content_for_header }}
 
+    <style>
+      @font-face {
+        font-family: 'Antique Legacy';
+        src: url("{{ 'AntiqueLegacy-Light.otf' | asset_url }}") format('opentype');
+        font-weight: 300;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: 'Antique Legacy';
+        src: url("{{ 'AntiqueLegacy-LightItalic.otf' | asset_url }}") format('opentype');
+        font-weight: 300;
+        font-style: italic;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: 'Fragment Mono';
+        src: url("{{ 'FragmentMono-Regular.ttf' | asset_url }}") format('truetype');
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: 'Fragment Mono';
+        src: url("{{ 'FragmentMono-Italic.ttf' | asset_url }}") format('truetype');
+        font-weight: 400;
+        font-style: italic;
+        font-display: swap;
+      }
+
+      :root {
+        --bg-color: #E6E9EA;
+        --border-color: #CBD0D3;
+        --accent-purple: #9022B8;
+      }
+    </style>
+
     <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="{{ 'theme.css' | asset_url }}"></noscript>
 
@@ -21,7 +58,7 @@
     <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
   </head>
 
-  <body class="bg-[#EFEFEF] text-[#0A0A0A] min-h-screen flex flex-col selection:bg-[#8000FF] selection:text-white">
+  <body class="bg-[#E6E9EA] text-[#0A0A0A] min-h-screen flex flex-col selection:bg-[#9022B8] selection:text-white">
     <a class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:p-4 focus:bg-black focus:text-white" href="#MainContent">
       Skip to content
     </a>

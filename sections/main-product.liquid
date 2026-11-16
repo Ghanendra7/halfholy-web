@@ -1,4 +1,4 @@
-<section class="w-full bg-[#EFEFEF] hairline-b">
+<section class="w-full bg-[#E6E9EA] hairline-b">
   <!-- Top Editorial Notice Bar (Optional / Configurable) -->
   {% if section.settings.show_brand_statement %}
     <div class="w-full px-6 md:px-8 py-6 hairline-b">
@@ -20,7 +20,7 @@
           {% for media in product.media %}
             <button 
               type="button" 
-              class="w-12 h-16 bg-[#E8E8E8] hairline-all p-1 hover:border-[#8000FF] transition-colors {% if forloop.first %}border-purple-active{% endif %}"
+              class="w-12 h-16 bg-[#E8E8E8] hairline-all p-1 hover:border-[#9022B8] transition-colors {% if forloop.first %}border-purple-active{% endif %}"
               onclick="document.getElementById('product-media-{{ media.id }}').scrollIntoView({behavior: 'smooth', block: 'nearest'})"
               aria-label="View media {{ forloop.index }}"
             >
@@ -143,7 +143,7 @@
                               class="sr-only peer"
                               {% if option.selected_value == value %}checked{% endif %}
                             >
-                            <span class="inline-flex items-center justify-center px-3 py-1.5 text-xs font-mono uppercase hairline-all bg-transparent peer-checked:bg-[#8000FF] peer-checked:text-white peer-checked:border-[#8000FF] hover:border-black transition-colors">
+                            <span class="inline-flex items-center justify-center px-3 py-1.5 text-xs font-mono uppercase hairline-all bg-transparent peer-checked:bg-[#9022B8] peer-checked:text-white peer-checked:border-[#9022B8] hover:border-black transition-colors">
                               {{ value }}
                             </span>
                           </label>
@@ -162,7 +162,7 @@
                     <span class="text-[11px] font-mono uppercase tracking-wider text-[#666666]">Color</span>
                     <div class="flex flex-wrap gap-2">
                       <span class="px-3 py-1.5 text-xs font-mono uppercase hairline-all bg-transparent text-[#666666] hover:border-black cursor-pointer">Burgundy</span>
-                      <span class="px-3 py-1.5 text-xs font-mono uppercase hairline-all bg-[#8000FF] text-white border-[#8000FF] cursor-pointer">Purple</span>
+                      <span class="px-3 py-1.5 text-xs font-mono uppercase hairline-all bg-[#9022B8] text-white border-[#9022B8] cursor-pointer">Purple</span>
                       <span class="px-3 py-1.5 text-xs font-mono uppercase hairline-all bg-transparent text-[#666666] hover:border-black cursor-pointer">Grey</span>
                     </div>
                   </div>
@@ -170,7 +170,7 @@
                     <span class="text-[11px] font-mono uppercase tracking-wider text-[#666666]">Size</span>
                     <div class="flex flex-wrap gap-2">
                       <span class="w-8 h-8 flex items-center justify-center text-xs font-mono uppercase hairline-all bg-transparent text-[#666666] hover:border-black cursor-pointer">S</span>
-                      <span class="w-8 h-8 flex items-center justify-center text-xs font-mono uppercase hairline-all bg-[#8000FF] text-white border-[#8000FF] cursor-pointer">M</span>
+                      <span class="w-8 h-8 flex items-center justify-center text-xs font-mono uppercase hairline-all bg-[#9022B8] text-white border-[#9022B8] cursor-pointer">M</span>
                       <span class="w-8 h-8 flex items-center justify-center text-xs font-mono uppercase hairline-all bg-transparent text-[#666666] hover:border-black cursor-pointer">L</span>
                       <span class="w-8 h-8 flex items-center justify-center text-xs font-mono uppercase hairline-all bg-transparent text-[#666666] hover:border-black cursor-pointer">XL</span>
                     </div>
@@ -201,7 +201,7 @@
                       name="add" 
                       data-add-to-cart-btn
                       data-original-text="{{ 'products.product.subscribe_and_save' | t }}"
-                      class="w-full bg-[#8000FF] hover:bg-[#7000E0] text-white py-3.5 px-6 text-xs font-mono tracking-widest uppercase flex items-center justify-center space-x-2 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                      class="w-full bg-[#9022B8] hover:bg-[#7E1DA2] text-white py-3.5 px-6 text-xs font-mono tracking-widest uppercase flex items-center justify-center space-x-2 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                       {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}
                     >
                       <span>↻</span>
@@ -230,9 +230,9 @@
                     {{ block.settings.content }}
                     {% if block.settings.show_manual_links %}
                       <div class="mt-3 flex gap-4 text-[11px] font-mono uppercase text-[#0A0A0A]">
-                        <a href="{{ block.settings.manual_en_url | default: '#' }}" class="underline hover:text-[#8000FF]">English</a>
-                        <a href="{{ block.settings.manual_de_url | default: '#' }}" class="underline hover:text-[#8000FF]">German</a>
-                        <a href="{{ block.settings.manual_fr_url | default: '#' }}" class="underline hover:text-[#8000FF]">French</a>
+                        <a href="{{ block.settings.manual_en_url | default: '#' }}" class="underline hover:text-[#9022B8]">English</a>
+                        <a href="{{ block.settings.manual_de_url | default: '#' }}" class="underline hover:text-[#9022B8]">German</a>
+                        <a href="{{ block.settings.manual_fr_url | default: '#' }}" class="underline hover:text-[#9022B8]">French</a>
                       </div>
                     {% endif %}
                   </div>

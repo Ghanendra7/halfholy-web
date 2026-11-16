@@ -1,4 +1,4 @@
-<section class="w-full bg-[#EFEFEF]">
+<section class="w-full bg-[#E6E9EA]">
   {% paginate collection.products by section.settings.products_per_page %}
     <div class="w-full">
       {% if collection.products.size > 0 %}
@@ -13,11 +13,11 @@
         {% if paginate.pages > 1 %}
           <div class="p-8 hairline-t flex justify-center items-center space-x-4 text-xs font-mono">
             {% if paginate.previous %}
-              <a href="{{ paginate.previous.url }}" class="underline hover:text-[#8000FF]">&larr; PREVIOUS</a>
+              <a href="{{ paginate.previous.url }}" class="underline hover:text-[#9022B8]">&larr; PREVIOUS</a>
             {% endif %}
             <span class="text-[#888888]">PAGE {{ paginate.current_page }} OF {{ paginate.pages }}</span>
             {% if paginate.next %}
-              <a href="{{ paginate.next.url }}" class="underline hover:text-[#8000FF]">NEXT &rarr;</a>
+              <a href="{{ paginate.next.url }}" class="underline hover:text-[#9022B8]">NEXT &rarr;</a>
             {% endif %}
           </div>
         {% endif %}
@@ -25,7 +25,7 @@
         {% comment %} Showcase Demo Grid matching Halfholy designs until products are created {% endcomment %}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 -space-x-[1px] -space-y-[1px]">
           {% for i in (1..8) %}
-            <div class="group relative bg-[#EFEFEF] hairline-all aspect-3/4 flex flex-col justify-between p-4 transition-all duration-200 hover:border-[#8000FF] hover:z-10 {% if i == 2 %}border-purple-active{% endif %}">
+            <div class="group relative bg-[#E6E9EA] hairline-all aspect-3/4 flex flex-col justify-between p-4 transition-all duration-200 hover:border-[#9022B8] hover:z-10 {% if i == 2 %}border-purple-active{% endif %}">
               <a href="/products/holy-balm" class="absolute inset-0 z-20" aria-label="Holy Lotion"></a>
               <div class="relative w-full h-full flex items-center justify-center p-6 overflow-hidden">
                 <img 

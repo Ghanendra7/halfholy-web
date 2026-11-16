@@ -1,4 +1,4 @@
-<section class="relative w-full bg-[#EFEFEF] hairline-b overflow-hidden">
+<section class="relative w-full bg-[#E6E9EA] hairline-b overflow-hidden">
   <div class="relative w-full min-h-[70vh] md:min-h-[85vh] flex items-center justify-center">
     {% if section.settings.image != blank %}
       {{ section.settings.image | image_url: width: 2000 | image_tag: 
@@ -20,7 +20,7 @@
 
     <!-- Newsletter / Teaser Floating Box (As seen in Image 1) -->
     {% if section.settings.show_floating_box %}
-      <div class="relative z-10 m-6 p-6 max-w-sm w-full bg-[#EFEFEF]/90 backdrop-blur-md hairline-all shadow-xl space-y-4">
+      <div class="relative z-10 m-6 p-6 max-w-sm w-full bg-[#E6E9EA]/90 backdrop-blur-md hairline-all shadow-xl space-y-4">
         {% if section.settings.box_title != blank %}
           <h2 class="text-xs font-mono uppercase tracking-widest text-[#0A0A0A]">
             {{ section.settings.box_title }}
@@ -33,11 +33,11 @@
             name="contact[email]" 
             placeholder="Enter your email" 
             required 
-            class="w-full bg-transparent hairline-all p-2.5 text-xs font-mono text-[#0A0A0A] placeholder-[#888888] focus:border-[#8000FF] focus:outline-none"
+            class="w-full bg-transparent hairline-all p-2.5 text-xs font-mono text-[#0A0A0A] placeholder-[#888888] focus:border-[#9022B8] focus:outline-none"
           >
           <button 
             type="submit" 
-            class="w-full bg-[#8000FF] hover:bg-[#7000E0] text-white py-2.5 px-4 text-xs font-mono uppercase tracking-wider transition-colors cursor-pointer"
+            class="w-full bg-[#9022B8] hover:bg-[#7E1DA2] text-white py-2.5 px-4 text-xs font-mono uppercase tracking-wider transition-colors cursor-pointer"
           >
             {{ section.settings.box_button_text | default: 'SUBSCRIBE' }}
           </button>
