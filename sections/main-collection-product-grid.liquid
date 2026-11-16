@@ -1,0 +1,48 @@
+<section class="w-full bg-[#EFEFEF]">
+  {% paginate collection.products by section.settings.products_per_page %}
+    <div class="w-full">
+      {% if collection.products.size > 0 %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 -space-x-[1px] -space-y-[1px]">
+          {% for product in collection.products %}
+            <div>
+              {% render 'product-card', product: product %}
+            </div>
+          {% endfor %}
+        </div>
+
+        {% if paginate.pages > 1 %}
+          <div class="p-8 hairline-t flex justify-center items-center space-x-4 text-xs font-mono">
+            {% if paginate.previous %}
+              <a href="{{ paginate.previous.url }}" class="underline hover:text-[#8000FF]">&larr; PREVIOUS</a>
+            {% endif %}
+            <span class="text-[#888888]">PAGE {{ paginate.current_page }} OF {{ paginate.pages }}</span>
+            {% if paginate.next %}
+              <a href="{{ paginate.next.url }}" class="underline hover:text-[#8000FF]">NEXT &rarr;</a>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% else %}
+        <div class="py-24 text-center">
+          <p class="text-xs font-mono uppercase text-[#666666]">No products found in this collection.</p>
+        </div>
+      {% endif %}
+    </div>
+  {% endpaginate %}
+</section>
+
+{% schema %}
+{
+  "name": "Collection Grid",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 4,
+      "max": 36,
+      "step": 4,
+      "default": 16,
+      "label": "Products per page"
+    }
+  ]
+}
+{% endschema %}

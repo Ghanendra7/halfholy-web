@@ -1,0 +1,92 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "category": {
+          "type": "category",
+          "settings": {}
+        },
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "ingredients": {
+          "type": "ingredients",
+          "settings": {}
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {}
+        },
+        "how_to_use": {
+          "type": "accordion",
+          "settings": {
+            "title": "HOW TO USE",
+            "content": "<p>Apply liberally to lips as needed. Non-seasonal, everyday ritual formulated to restore, rejuvenate, and bring life back with intention and precision.</p>",
+            "show_manual_links": false
+          }
+        },
+        "specifications": {
+          "type": "accordion",
+          "settings": {
+            "title": "SPECIFICATIONS",
+            "content": "<p>Net Wt. 15g / 0.5 oz. Encased in an architectural form inspired by sacred objects. Designed to be kept and displayed.</p>",
+            "show_manual_links": false
+          }
+        },
+        "manual": {
+          "type": "accordion",
+          "settings": {
+            "title": "MANUAL",
+            "content": "<p>Download official product literature and ritual guidance:</p>",
+            "show_manual_links": true
+          }
+        }
+      },
+      "block_order": [
+        "category",
+        "title",
+        "price",
+        "description",
+        "ingredients",
+        "variant_picker",
+        "buy_buttons",
+        "how_to_use",
+        "specifications",
+        "manual"
+      ],
+      "settings": {
+        "show_brand_statement": true,
+        "brand_statement": "halfholy is a beauty house built on ceremony. We make everyday relics — products that live on the skin as sensation and objects designed to be used, kept, and looked at. the act of caring for yourself as something sacred.",
+        "brand_email": "contact@halfholy.nyc"
+      }
+    },
+    "split_campaign": {
+      "type": "editorial-split",
+      "settings": {
+        "subheading": "CEREMONY",
+        "heading": "An everyday ritual elevated.",
+        "body": "<p>Backed by scientists, dermatologists, and skin specialists. Formulated to restore, rejuvenate, and bring life back to the lips.</p>",
+        "button_label": "DISCOVER MORE",
+        "button_link": "/pages/about"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "split_campaign"
+  ]
+}

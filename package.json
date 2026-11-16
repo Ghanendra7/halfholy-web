@@ -1,0 +1,17 @@
+{
+  "name": "halfholy-shopify-theme",
+  "version": "1.0.0",
+  "description": "Bespoke Shopify Online Store 2.0 Theme for Halfholy",
+  "type": "module",
+  "scripts": {
+    "dev": "shopify theme dev --store halfholy-mggfc111.myshopify.com",
+    "build:css": "npx @tailwindcss/cli -i ./src/main.css -o ./assets/theme.css --minify",
+    "watch:css": "npx @tailwindcss/cli -i ./src/main.css -o ./assets/theme.css --watch",
+    "check": "shopify theme check",
+    "push": "shopify theme push --store halfholy-mggfc111.myshopify.com"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.0.0",
+    "tailwindcss": "^4.0.0"
+  }
+}

@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-bg: #EFEFEF;
+  --color-brand-surface: #F5F5F5;
+  --color-brand-dark: #0A0A0A;
+  --color-brand-border: #D2D2D2;
+  --color-brand-border-dark: #A5A5A5;
+  --color-brand-purple: #8000FF;
+  --color-brand-purple-hover: #7000E0;
+  --color-brand-muted: #666666;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: "SF Mono", Monaco, Menlo, Consolas, "Courier New", monospace;
+  --font-serif: "Times New Roman", Times, Didot, Georgia, serif;
+}
+
+/* Custom base styles matching Halfholy brutalist luxury aesthetic */
+:root {
+  --bg-color: #EFEFEF;
+  --text-color: #0A0A0A;
+  --border-color: #D2D2D2;
+  --accent-purple: #8000FF;
+}
+
+html, body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+}
+
+/* Hairline Grid system */
+.hairline-b {
+  border-bottom: 1px solid var(--border-color);
+}
+.hairline-t {
+  border-top: 1px solid var(--border-color);
+}
+.hairline-l {
+  border-left: 1px solid var(--border-color);
+}
+.hairline-r {
+  border-right: 1px solid var(--border-color);
+}
+.hairline-all {
+  border: 1px solid var(--border-color);
+}
+
+/* Selected / Active purple outline */
+.border-purple-active {
+  border: 1.5px solid var(--accent-purple) !important;
+}
+
+/* Accordion transition styles */
+details summary::-webkit-details-marker {
+  display: none;
+}
+details summary {
+  list-style: none;
+}
+
+/* Custom scrollbar for gallery and drawer */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #C4C4C4;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #A0A0A0;
+}

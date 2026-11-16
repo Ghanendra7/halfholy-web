@@ -1,0 +1,24 @@
+{
+  "general": {
+    "cart": {
+      "view": "View Cart",
+      "checkout": "Checkout",
+      "empty": "Your cart is currently empty.",
+      "subtotal": "Subtotal",
+      "cart_title": "Shopping Bag"
+    },
+    "continue_shopping": "Continue Shopping"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to Cart",
+      "sold_out": "Sold Out",
+      "unavailable": "Unavailable",
+      "subscribe_and_save": "Subscribe and Save",
+      "one_time_purchase": "+ One-Time Purchase",
+      "specifications": "SPECIFICATIONS",
+      "how_to_use": "HOW TO USE",
+      "manual": "MANUAL"
+    }
+  }
+}

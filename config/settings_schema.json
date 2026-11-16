@@ -1,0 +1,59 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Halfholy Bespoke",
+    "theme_version": "1.0.0",
+    "theme_author": "Halfholy Studio",
+    "theme_documentation_url": "https://halfholy.com",
+    "theme_support_url": "https://halfholy.com"
+  },
+  {
+    "name": "Brand Colors",
+    "settings": [
+      {
+        "type": "color",
+        "id": "color_bg",
+        "label": "Background Color",
+        "default": "#EFEFEF"
+      },
+      {
+        "type": "color",
+        "id": "color_text",
+        "label": "Text Color",
+        "default": "#0A0A0A"
+      },
+      {
+        "type": "color",
+        "id": "color_border",
+        "label": "Hairline Border Color",
+        "default": "#D2D2D2"
+      },
+      {
+        "type": "color",
+        "id": "color_purple",
+        "label": "Accent Purple Color",
+        "default": "#8000FF"
+      }
+    ]
+  },
+  {
+    "name": "Social Media Links",
+    "settings": [
+      {
+        "type": "url",
+        "id": "social_instagram_link",
+        "label": "Instagram Link"
+      },
+      {
+        "type": "url",
+        "id": "social_linkedin_link",
+        "label": "LinkedIn Link"
+      },
+      {
+        "type": "url",
+        "id": "social_discord_link",
+        "label": "Discord Link"
+      }
+    ]
+  }
+]

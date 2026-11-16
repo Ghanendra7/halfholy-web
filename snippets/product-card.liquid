@@ -1,0 +1,30 @@
+{% comment %}
+  Renders a product card in the Halfholy architectural grid
+  Usage:
+  {% render 'product-card', product: product %}
+{% endcomment %}
+
+<div class="group relative bg-[#EFEFEF] hairline-all aspect-3/4 flex flex-col justify-between p-4 transition-all duration-200 hover:border-[#8000FF] hover:z-10">
+  <a href="{{ product.url }}" class="absolute inset-0 z-20" aria-label="{{ product.title | escape }}"></a>
+  
+  <!-- Media Container -->
+  <div class="relative w-full h-full flex items-center justify-center overflow-hidden p-6">
+    {% if product.featured_media %}
+      {{ product.featured_media | image_url: width: 800 | image_tag: 
+        class: 'max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-102',
+        loading: 'lazy',
+        widths: '300, 450, 600, 800'
+      }}
+    {% else %}
+      <div class="w-full h-full flex items-center justify-center bg-[#E5E5E5] text-[#999999] text-xs font-mono">
+        NO MEDIA
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Card Info Bar -->
+  <div class="w-full pt-3 hairline-t flex items-center justify-between text-xs font-normal tracking-tight text-[#0A0A0A]">
+    <span>{{ product.title }}</span>
+    <span class="font-mono text-[11px] text-[#0A0A0A]">{{ product.price | money }}</span>
+  </div>
+</div>

@@ -1,0 +1,75 @@
+<footer class="w-full hairline-t bg-[#EFEFEF] mt-auto">
+  <div class="w-full px-6 md:px-8 py-10 md:py-14">
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-8 text-[11px] font-mono uppercase tracking-wider text-[#0A0A0A]">
+      <!-- Col 1: Year / Brand -->
+      <div class="flex flex-col space-y-1">
+        <span class="font-medium">{{ section.settings.col_1_title | default: 'HALF HOLY' }}</span>
+        <span class="text-[#666666]">{{ section.settings.col_1_subtitle | default: '2026' }}</span>
+      </div>
+
+      <!-- Col 2: Contact -->
+      <div class="flex flex-col space-y-2">
+        <span class="font-medium">CONTACT</span>
+        <a href="/pages/stores" class="text-[#666666] hover:text-black transition-colors">STORE</a>
+        <a href="/pages/contact" class="text-[#666666] hover:text-black transition-colors">CONTACT US</a>
+        <a href="#newsletter" class="text-[#666666] hover:text-black transition-colors">SUBSCRIBE TO OUR NEWSLETTER</a>
+      </div>
+
+      <!-- Col 3: Legal -->
+      <div class="flex flex-col space-y-2">
+        <span class="font-medium">LEGAL</span>
+        <a href="/policies/privacy-policy" class="text-[#666666] hover:text-black transition-colors">PRIVACY POLICY</a>
+        <a href="/policies/terms-of-service" class="text-[#666666] hover:text-black transition-colors">TERMS AND CONDITIONS</a>
+      </div>
+
+      <!-- Col 4: Social -->
+      <div class="flex flex-col space-y-2">
+        <span class="font-medium">SOCIAL</span>
+        <a href="{{ settings.social_instagram_link | default: '#' }}" target="_blank" rel="noopener" class="text-[#666666] hover:text-black transition-colors">INSTAGRAM</a>
+        <a href="{{ settings.social_linkedin_link | default: '#' }}" target="_blank" rel="noopener" class="text-[#666666] hover:text-black transition-colors">LINKEDIN</a>
+        <a href="{{ settings.social_discord_link | default: '#' }}" target="_blank" rel="noopener" class="text-[#666666] hover:text-black transition-colors">DISCORD</a>
+      </div>
+
+      <!-- Col 5: About & Script Signature -->
+      <div class="flex flex-col justify-between space-y-2">
+        <div class="flex flex-col space-y-2">
+          <span class="font-medium">ABOUT</span>
+          <a href="/policies/shipping-policy" class="text-[#666666] hover:text-black transition-colors">SHIPPING</a>
+          <a href="/pages/payment-information" class="text-[#666666] hover:text-black transition-colors">PAYMENT INFORMATION</a>
+          <a href="/policies/refund-policy" class="text-[#666666] hover:text-black transition-colors">RETURNS AND EXCHANGES</a>
+        </div>
+        <div class="pt-6 md:pt-0 self-start md:self-end">
+          <span class="font-serif italic text-lg tracking-normal lowercase text-[#0A0A0A]">
+            {{ section.settings.signature_text | default: 'half holy' }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "text",
+      "id": "col_1_title",
+      "label": "Brand Column Title",
+      "default": "HALF HOLY"
+    },
+    {
+      "type": "text",
+      "id": "col_1_subtitle",
+      "label": "Brand Column Subtitle",
+      "default": "2026"
+    },
+    {
+      "type": "text",
+      "id": "signature_text",
+      "label": "Signature Text",
+      "default": "half holy"
+    }
+  ]
+}
+{% endschema %}

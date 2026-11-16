@@ -1,0 +1,78 @@
+<section class="relative w-full bg-[#EFEFEF] hairline-b overflow-hidden">
+  <div class="relative w-full min-h-[70vh] md:min-h-[85vh] flex items-center justify-center">
+    {% if section.settings.image != blank %}
+      {{ section.settings.image | image_url: width: 2000 | image_tag: 
+        class: 'absolute inset-0 w-full h-full object-cover',
+        loading: 'eager',
+        fetchpriority: 'high'
+      }}
+    {% else %}
+      <div class="absolute inset-0 w-full h-full bg-[#111111] flex items-center justify-center text-white/30 text-xs font-mono uppercase tracking-widest">
+        EDITORIAL HERO VISUAL / VIDEO
+      </div>
+    {% endif %}
+
+    <!-- Newsletter / Teaser Floating Box (As seen in Image 1) -->
+    {% if section.settings.show_floating_box %}
+      <div class="relative z-10 m-6 p-6 max-w-sm w-full bg-[#EFEFEF]/90 backdrop-blur-md hairline-all shadow-xl space-y-4">
+        {% if section.settings.box_title != blank %}
+          <h2 class="text-xs font-mono uppercase tracking-widest text-[#0A0A0A]">
+            {{ section.settings.box_title }}
+          </h2>
+        {% endif %}
+        {% form 'customer', class: 'space-y-3' %}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <input 
+            type="email" 
+            name="contact[email]" 
+            placeholder="Enter your email" 
+            required 
+            class="w-full bg-transparent hairline-all p-2.5 text-xs font-mono text-[#0A0A0A] placeholder-[#888888] focus:border-[#8000FF] focus:outline-none"
+          >
+          <button 
+            type="submit" 
+            class="w-full bg-[#8000FF] hover:bg-[#7000E0] text-white py-2.5 px-4 text-xs font-mono uppercase tracking-wider transition-colors cursor-pointer"
+          >
+            {{ section.settings.box_button_text | default: 'SUBSCRIBE' }}
+          </button>
+        {% endform %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Editorial Hero",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Hero Image"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_floating_box",
+      "label": "Show Floating Newsletter / Action Box",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "box_title",
+      "label": "Floating Box Title",
+      "default": "ENTER THE CEREMONY"
+    },
+    {
+      "type": "text",
+      "id": "box_button_text",
+      "label": "Button Label",
+      "default": "SUBSCRIBE"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Editorial Hero"
+    }
+  ]
+}
+{% endschema %}
