@@ -33,7 +33,7 @@
                   </div>
                   <div class="flex items-center justify-between text-[10px] font-mono mt-2">
                     <span>Qty: {{ item.quantity }}</span>
-                    <a href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity=0" class="underline hover:opacity-60">Remove</a>
+                    <button type="button" data-cart-remove data-line="{{ forloop.index }}" class="underline hover:opacity-60 cursor-pointer bg-transparent border-none p-0 text-inherit">Remove</button>
                   </div>
                 </div>
               </li>
@@ -50,7 +50,7 @@
       <div class="p-6 hairline-t space-y-4">
         <div class="flex justify-between text-xs font-mono uppercase tracking-wider">
           <span>Subtotal</span>
-          <span>{{ cart.total_price | money }}</span>
+          <span data-cart-subtotal>{{ cart.total_price | money }}</span>
         </div>
         <p class="text-[10px] font-mono uppercase text-[#666666]">Shipping & taxes calculated at checkout.</p>
         <form action="{{ routes.cart_url }}" method="post">

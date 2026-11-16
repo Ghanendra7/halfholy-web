@@ -44,6 +44,25 @@ class CartDrawer extends HTMLElement {
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && this.classList.contains('active')) this.close();
     });
+
+    // AJAX remove item listener
+    this.addEventListener('click', async (e) => {
+      const removeBtn = e.target.closest('[data-cart-remove]');
+      if (removeBtn) {
+        e.preventDefault();
+        const line = removeBtn.dataset.line;
+        removeBtn.disabled = true;
+        removeBtn.textContent = 'Removing...';
+        try {
+          await fetch(`${window.routes.cart_change_url}?line=${line}&quantity=0`, {
+            headers: { 'Accept': 'application/json' }
+          });
+          await this.updateCart();
+        } catch (err) {
+          console.error('Error removing item', err);
+        }
+      }
+    });
   }
 
   open() {
@@ -72,12 +91,17 @@ class CartDrawer extends HTMLElement {
       if (container && html) {
         container.innerHTML = html;
       }
-      // Update cart count badge
+      // Update cart count badge and subtotal
       const cartRes = await fetch(window.routes.cart_url + '.js');
       const cartData = await cartRes.json();
       document.querySelectorAll('[data-cart-count]').forEach(el => {
         el.textContent = `(${cartData.item_count})`;
       });
+
+      const subtotalEl = this.querySelector('[data-cart-subtotal]');
+      if (subtotalEl) {
+        subtotalEl.textContent = '$' + (cartData.total_price / 100).toFixed(2);
+      }
     } catch (e) {
       console.error('Error updating cart', e);
     }
