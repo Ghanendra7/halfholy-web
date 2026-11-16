@@ -1,0 +1,14 @@
+Handle,Title,Body (HTML),Vendor,Product Category,Type,Tags,Published,Option1 Name,Option1 Value,Option2 Name,Option2 Value,Variant SKU,Variant Grams,Variant Inventory Tracker,Variant Inventory Qty,Variant Inventory Policy,Variant Fulfillment Service,Variant Price,Variant Compare At Price,Variant Requires Shipping,Variant Taxable,Status
+holy-balm,Holy Balm,"<p>The brand's first offering is an everyday, unisex, non-seasonal lip balm designed to elevate an essential, often overlooked product into a sacred ritual. Backed by scientists, dermatologists, and skin specialists, it is formulated to restore, rejuvenate, and bring life back to the lips with intention and precision. Encased in a form inspired by sacred objects, it exists as both a high-performance product and an artifact designed to be seen, never hidden.</p>",Halfholy,Lip Balms,Lip Products,relic,TRUE,Color,Burgundy,Size,S,HB-BUR-S,50,shopify,50,continue,manual,50.00,,TRUE,TRUE,active
+holy-balm,,,,,,,Color,Burgundy,Size,M,HB-BUR-M,50,shopify,50,continue,manual,50.00,,TRUE,TRUE,active
+holy-balm,,,,,,,Color,Burgundy,Size,L,HB-BUR-L,50,shopify,50,continue,manual,50.00,,TRUE,TRUE,active
+holy-balm,,,,,,,Color,Burgundy,Size,XL,HB-BUR-XL,50,shopify,50,continue,manual,50.00,,TRUE,TRUE,active
+holy-balm,,,,,,,Color,Purple,Size,S,HB-PUR-S,50,shopify,50,continue,manual,50.00,,TRUE,TRUE,active
+holy-balm,,,,,,,Color,Purple,Size,M,HB-PUR-M,50,shopify,50,continue,manual,50.00,,TRUE,TRUE,active
+holy-balm,,,,,,,Color,Purple,Size,L,HB-PUR-L,50,shopify,50,continue,manual,50.00,,TRUE,TRUE,active
+holy-balm,,,,,,,Color,Purple,Size,XL,HB-PUR-XL,50,shopify,50,continue,manual,50.00,,TRUE,TRUE,active
+holy-balm,,,,,,,Color,Grey,Size,S,HB-GRY-S,50,shopify,50,continue,manual,50.00,,TRUE,TRUE,active
+holy-balm,,,,,,,Color,Grey,Size,M,HB-GRY-M,50,shopify,50,continue,manual,50.00,,TRUE,TRUE,active
+holy-balm,,,,,,,Color,Grey,Size,L,HB-GRY-L,50,shopify,50,continue,manual,50.00,,TRUE,TRUE,active
+holy-balm,,,,,,,Color,Grey,Size,XL,HB-GRY-XL,50,shopify,50,continue,manual,50.00,,TRUE,TRUE,active
+holy-lotion,Holy Lotion,"<p>Formulated to restore barrier function with non-comedogenic lipid structures. An architectural skin relic.</p>",Halfholy,Body Lotions,Body Products,relic,TRUE,Title,Default Title,,,HL-001,200,shopify,50,continue,manual,250.00,,TRUE,TRUE,active
