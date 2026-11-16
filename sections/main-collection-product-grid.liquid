@@ -22,8 +22,27 @@
           </div>
         {% endif %}
       {% else %}
-        <div class="py-24 text-center">
-          <p class="text-xs font-mono uppercase text-[#666666]">No products found in this collection.</p>
+        {% comment %} Showcase Demo Grid matching Halfholy designs until products are created {% endcomment %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 -space-x-[1px] -space-y-[1px]">
+          {% for i in (1..8) %}
+            <div class="group relative bg-[#EFEFEF] hairline-all aspect-3/4 flex flex-col justify-between p-4 transition-all duration-200 hover:border-[#8000FF] hover:z-10 {% if i == 2 %}border-purple-active{% endif %}">
+              <a href="/products/holy-balm" class="absolute inset-0 z-20" aria-label="Holy Lotion"></a>
+              <div class="relative w-full h-full flex items-center justify-center p-6 overflow-hidden">
+                <img 
+                  src="{{ 'sample-relic.jpg' | asset_url }}" 
+                  alt="Holy Relic" 
+                  class="max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-102"
+                  loading="lazy"
+                  width="350"
+                  height="550"
+                >
+              </div>
+              <div class="w-full pt-3 hairline-t flex items-center justify-between text-xs font-normal tracking-tight text-[#0A0A0A]">
+                <span>{% if i == 1 %}Holy Balm{% else %}Holy Lotion{% endif %}</span>
+                <span class="font-mono text-[11px] text-[#0A0A0A]">{% if i == 1 %}50.00 USD{% else %}250.00 USD{% endif %}</span>
+              </div>
+            </div>
+          {% endfor %}
         </div>
       {% endif %}
     </div>

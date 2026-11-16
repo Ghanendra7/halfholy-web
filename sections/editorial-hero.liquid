@@ -7,9 +7,15 @@
         fetchpriority: 'high'
       }}
     {% else %}
-      <div class="absolute inset-0 w-full h-full bg-[#111111] flex items-center justify-center text-white/30 text-xs font-mono uppercase tracking-widest">
-        EDITORIAL HERO VISUAL / VIDEO
-      </div>
+      <img 
+        src="{{ 'hero-campaign.jpg' | asset_url }}" 
+        alt="Halfholy Campaign" 
+        class="absolute inset-0 w-full h-full object-cover object-top opacity-90"
+        loading="eager"
+        fetchpriority="high"
+        width="1024"
+        height="1200"
+      >
     {% endif %}
 
     <!-- Newsletter / Teaser Floating Box (As seen in Image 1) -->
