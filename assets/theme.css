@@ -570,6 +570,13 @@ img, svg {
   align-self: flex-end;
 }
 
+@media (min-width: 768px) {
+  .site-footer__signature {
+    position: relative;
+    bottom: -9px;
+  }
+}
+
 .site-footer__signature svg {
   width: 101px;
   height: 29px;
