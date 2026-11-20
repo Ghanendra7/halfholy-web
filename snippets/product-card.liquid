@@ -25,24 +25,45 @@
     assign primary_media = product.featured_media | default: product.media[0]
 
     # Gallery metafield for editorial photoshots
-    assign gallery_meta = product.metafields.custom.gallery.value | default: product.metafields.custom.editorial_gallery.value
-    assign hover_image = blank
-    if gallery_meta != blank
-      if gallery_meta.first != blank
-        assign hover_image = gallery_meta.first
-      elsif gallery_meta[0] != blank
-        assign hover_image = gallery_meta[0]
-      else
-        assign hover_image = gallery_meta
+    assign hover_image = nil
+    assign gallery_files = product.metafields.custom.gallery.value | default: product.metafields.custom.editorial_gallery.value
+
+    # Extract first valid image from gallery metafield list
+    if gallery_files.size > 0
+      for file in gallery_files
+        if file != blank
+          if file.preview_image != blank
+            assign hover_image = file.preview_image
+            break
+          elsif file.image != blank
+            assign hover_image = file.image
+            break
+          elsif file.src != blank
+            assign hover_image = file
+            break
+          elsif file.url != blank
+            assign hover_image = file
+            break
+          endif
+        endif
+      endfor
+    elsif gallery_files != blank and gallery_files.size == nil
+      # Single file reference fallback
+      if gallery_files.preview_image != blank
+        assign hover_image = gallery_files.preview_image
+      elsif gallery_files.image != blank
+        assign hover_image = gallery_files.image
+      elsif gallery_files.src != blank or gallery_files.url != blank
+        assign hover_image = gallery_files
       endif
     endif
 
-    # Fallback to secondary media if gallery metafield is empty
-    if hover_image == blank and product.media.size > 1
-      assign hover_image = product.media[1]
+    # Fallback to secondary media if gallery metafield has no images
+    if hover_image == nil and product.media.size > 1
+      assign hover_image = product.media[1].preview_image | default: product.media[1]
     endif
 
-    if hover_image != blank
+    if hover_image != nil
       assign has_hover = true
     else
       assign has_hover = false
@@ -99,14 +120,25 @@
       {% endif %}
 
       <!-- Gallery's 1st Image on Hover -->
-      {% if has_hover and hover_image != blank %}
+      {% if has_hover and hover_image != nil %}
         <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-[#F1F1F1] z-[1]">
-          {{ hover_image | image_url: width: 900 | image_tag: 
-            class: 'w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]',
-            loading: 'lazy',
-            decoding: 'async',
-            widths: '300, 450, 600, 900'
-          }}
+          {% if hover_image.src != blank or hover_image.preview_image != blank or hover_image.width != blank %}
+            {{ hover_image | image_url: width: 900 | image_tag: 
+              class: 'w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]',
+              loading: 'lazy',
+              decoding: 'async',
+              widths: '300, 450, 600, 900'
+            }}
+          {% elsif hover_image.url != blank %}
+            <img 
+              src="{{ hover_image.url }}" 
+              alt="{{ card_title }}" 
+              class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
+              loading="lazy"
+              width="480"
+              height="640"
+            >
+          {% endif %}
         </div>
       {% endif %}
     {% endif %}
