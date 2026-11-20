@@ -110,17 +110,18 @@
             </div>
 
           {% when 'ingredients' %}
-            <div class="p-4 bg-[#E8E8E8] hairline-all text-[10px] font-mono uppercase tracking-widest text-[#444444] space-y-1" {{ block.shopify_attributes }}>
-              <span class="block text-[#0A0A0A] font-semibold mb-1">INGREDIENTS / COMPOSITION</span>
-              {% if product.metafields.custom.ingredients != blank %}
+            <div class="py-2 text-xs font-mono leading-relaxed text-[#0A0A0A] space-y-1" {{ block.shopify_attributes }}>
+              {% if product.metafields.custom.ingredients.value != blank %}
+                {{ product.metafields.custom.ingredients.value | newline_to_br }}
+              {% elsif product.metafields.custom.ingredients != blank %}
                 {{ product.metafields.custom.ingredients | newline_to_br }}
               {% else %}
-                <p>CERAMIDE NP</p>
-                <p>SQUALANE, BUTYROSPERMUM PARKII</p>
-                <p>SHEA BUTTER</p>
-                <p>BIS-DIGLYCERYL POLYACYLADIPATE-2</p>
-                <p>RICINUS COMMUNIS SEED OIL</p>
-                <p>BUTYROSPERMUM PARKII BUTTER</p>
+                <p>Ceramide NP</p>
+                <p>Squalane, Butyrospermum Parkii</p>
+                <p>Shea Butter</p>
+                <p>Bis-Diglyceryl Polyacyladipate-2</p>
+                <p>Ricinus Communis Seed Oil</p>
+                <p>Butyrospermum Parkii Butter</p>
               {% endif %}
             </div>
 

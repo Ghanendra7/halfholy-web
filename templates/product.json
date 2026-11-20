@@ -83,10 +83,17 @@
         "button_label": "DISCOVER MORE",
         "button_link": "/pages/about"
       }
+    },
+    "editorial_gallery": {
+      "type": "product-editorial-gallery",
+      "settings": {
+        "heading": "CAMPAIGN ARCHIVE"
+      }
     }
   },
   "order": [
     "main",
-    "split_campaign"
+    "split_campaign",
+    "editorial_gallery"
   ]
 }
