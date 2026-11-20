@@ -62,11 +62,11 @@
       }
 
       :root {
-        --bg-color: #FFFFFF;
-        --card-bg: #F1F1F1;
-        --footer-bg: #E6E9EA;
-        --border-color: #CBD0D3;
-        --accent-purple: #9022B8;
+        --color-brand-bg: #FFFFFF;
+        --color-brand-card: #F1F1F1;
+        --color-brand-footer: #E6E9EA;
+        --color-brand-border: #CBD0D3;
+        --color-brand-purple: #9022B8;
       }
 
       html, body {
@@ -90,14 +90,14 @@
     <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
   </head>
 
-  <body class="bg-white text-black min-h-screen flex flex-col selection:bg-[#9022B8] selection:text-white">
-    <a class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:p-4 focus:bg-black focus:text-white" href="#MainContent">
+  <body class="site-body min-h-screen flex flex-col">
+    <a class="sr-only" href="#MainContent">
       Skip to content
     </a>
 
     {% section 'header' %}
 
-    <main id="MainContent" class="flex-grow focus:outline-none" tabindex="-1">
+    <main id="MainContent" class="site-main" tabindex="-1">
       {{ content_for_layout }}
     </main>
 

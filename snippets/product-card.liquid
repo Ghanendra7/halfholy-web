@@ -36,7 +36,7 @@
             assign hover_image = file.preview_image
             break
           elsif file.image != blank
-            assign hover_image = file.image
+            assign hover_image = file
             break
           elsif file.src != blank
             assign hover_image = file
@@ -52,7 +52,7 @@
       if gallery_files.preview_image != blank
         assign hover_image = gallery_files.preview_image
       elsif gallery_files.image != blank
-        assign hover_image = gallery_files.image
+        assign hover_image = gallery_files
       elsif gallery_files.src != blank or gallery_files.url != blank
         assign hover_image = gallery_files
       endif
@@ -71,28 +71,27 @@
   endif
 %}
 
-<div class="group relative flex flex-col w-full text-black select-none">
+<div class="product-card {% if is_active %}product-card--active{% endif %}">
   <!-- Card Image Container (3:4 aspect ratio, full bleed object-cover) -->
-  <div class="relative w-full aspect-[3/4] bg-[#F1F1F1] overflow-hidden transition-all duration-150 outline outline-[0.5px] {% if is_active %}outline-[#9022B8]{% else %}outline-transparent group-hover:outline-[#9022B8] group-focus-within:outline-[#9022B8]{% endif %}">
-    <a href="{{ card_url }}" class="absolute inset-0 z-10" aria-label="{{ card_title | escape }}"></a>
+  <div class="product-card__media">
+    <a href="{{ card_url }}" class="product-card__link" aria-label="{{ card_title | escape }}"></a>
     
     {% if is_sample %}
       <!-- Primary Sample Image -->
       <img 
         src="{{ primary_image_url }}" 
         alt="{{ card_title }}" 
-        class="w-full h-full object-cover transition-all duration-300 ease-out"
+        class="product-card__image"
         loading="lazy"
         width="480"
         height="640"
       >
       <!-- Gallery's 1st Image on Hover -->
       {% if has_hover %}
-        <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-[#F1F1F1] z-[1]">
+        <div class="product-card__hover-media">
           <img 
             src="{{ hover_image_url }}" 
             alt="{{ card_title }} - Editorial Detail" 
-            class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
             loading="lazy"
             width="480"
             height="640"
@@ -103,7 +102,7 @@
       {% if primary_media %}
         <!-- Primary Featured Image (fully covering container) -->
         {{ primary_media | image_url: width: 900 | image_tag: 
-          class: 'w-full h-full object-cover transition-all duration-300 ease-out',
+          class: 'product-card__image',
           loading: 'lazy',
           decoding: 'async',
           widths: '300, 450, 600, 900'
@@ -112,7 +111,7 @@
         <img 
           src="{{ 'holy-lotion-sample.png' | asset_url }}" 
           alt="{{ card_title }}" 
-          class="w-full h-full object-cover transition-transform duration-300 ease-out"
+          class="product-card__image"
           loading="lazy"
           width="480"
           height="640"
@@ -121,10 +120,9 @@
 
       <!-- Gallery's 1st Image on Hover -->
       {% if has_hover and hover_image != nil %}
-        <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-[#F1F1F1] z-[1]">
+        <div class="product-card__hover-media">
           {% if hover_image.src != blank or hover_image.preview_image != blank or hover_image.width != blank %}
             {{ hover_image | image_url: width: 900 | image_tag: 
-              class: 'w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]',
               loading: 'lazy',
               decoding: 'async',
               widths: '300, 450, 600, 900'
@@ -133,7 +131,6 @@
             <img 
               src="{{ hover_image.url }}" 
               alt="{{ card_title }}" 
-              class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
               loading="lazy"
               width="480"
               height="640"
@@ -145,9 +142,9 @@
   </div>
 
   <!-- Card Info Line -->
-  <div class="w-full mt-[8px] px-[2px] flex items-center justify-between text-[12px] leading-[1.2] font-antique font-light tracking-[-0.005em] text-black">
-    <span class="truncate pr-[8px]">{{ card_title }}</span>
-    <span class="shrink-0 font-antique text-black transition-opacity duration-150 ease-out {% if is_active %}opacity-100{% else %}opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 group-active:opacity-100{% endif %}">
+  <div class="product-card__info">
+    <span class="product-card__title">{{ card_title }}</span>
+    <span class="product-card__price {% if is_active %}is-visible{% endif %}">
       {{ card_price }}
     </span>
   </div>

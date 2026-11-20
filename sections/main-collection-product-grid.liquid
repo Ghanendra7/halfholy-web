@@ -1,6 +1,6 @@
 <section 
   id="shopify-section-{{ section.id }}"
-  class="w-full bg-white min-h-[calc(100vh-116px)]"
+  class="collection-section"
   style="
     --grid-pt: {{ section.settings.padding_top_mobile | default: 48 }}px;
     --grid-pb: {{ section.settings.padding_bottom_mobile | default: 40 }}px;
@@ -19,35 +19,25 @@
         --grid-gap-y: {{ section.settings.gap_row_desktop | default: 24 }}px;
       }
     }
-    #shopify-section-{{ section.id }} .collection-grid-container {
-      padding-top: var(--grid-pt);
-      padding-bottom: var(--grid-pb);
-      padding-left: var(--grid-px);
-      padding-right: var(--grid-px);
-    }
-    #shopify-section-{{ section.id }} .collection-grid-items {
-      column-gap: var(--grid-gap-x);
-      row-gap: var(--grid-gap-y);
-    }
   </style>
 
-  <div class="w-full collection-grid-container">
+  <div class="collection-grid-container">
     {% paginate collection.products by section.settings.products_per_page %}
       {% if collection.products.size > 0 %}
-        <div class="grid grid-cols-2 md:grid-cols-4 collection-grid-items">
+        <div class="collection-grid-items">
           {% for product in collection.products %}
             {% render 'product-card', product: product %}
           {% endfor %}
         </div>
 
         {% if paginate.pages > 1 %}
-          <div class="mt-[48px] py-[24px] flex justify-center items-center space-x-[24px] text-[10px] leading-[1.2] font-mono tracking-[0.2em] uppercase text-black">
+          <div class="collection-pagination">
             {% if paginate.previous %}
-              <a href="{{ paginate.previous.url }}" class="hover:opacity-50 transition-opacity">&larr; PREVIOUS</a>
+              <a href="{{ paginate.previous.url }}">&larr; PREVIOUS</a>
             {% endif %}
-            <span class="text-[#888888]">PAGE {{ paginate.current_page }} OF {{ paginate.pages }}</span>
+            <span class="collection-pagination__info">PAGE {{ paginate.current_page }} OF {{ paginate.pages }}</span>
             {% if paginate.next %}
-              <a href="{{ paginate.next.url }}" class="hover:opacity-50 transition-opacity">NEXT &rarr;</a>
+              <a href="{{ paginate.next.url }}">NEXT &rarr;</a>
             {% endif %}
           </div>
         {% endif %}
@@ -57,7 +47,7 @@
           Renders 8 sample products matching the Figma "Shop" and "Shop - Mobile" frames.
           Card 2 showcases the active state with purple outline and price display.
         {% endcomment %}
-        <div class="grid grid-cols-2 md:grid-cols-4 collection-grid-items">
+        <div class="collection-grid-items">
           {% for i in (1..8) %}
             {% if i == 2 %}
               {% render 'product-card', is_sample: true, is_active: true %}
