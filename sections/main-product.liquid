@@ -110,11 +110,10 @@
             </div>
 
           {% when 'ingredients' %}
+            {% assign ingredients_data = product.metafields.custom.ingredients.value | default: product.metafields.custom.ingredients | default: product.metafields.custom.specifications.value | default: product.metafields.custom.specifications %}
             <div class="py-2 text-xs font-mono leading-relaxed text-[#0A0A0A] space-y-1" {{ block.shopify_attributes }}>
-              {% if product.metafields.custom.ingredients.value != blank %}
-                {{ product.metafields.custom.ingredients.value | newline_to_br }}
-              {% elsif product.metafields.custom.ingredients != blank %}
-                {{ product.metafields.custom.ingredients | newline_to_br }}
+              {% if ingredients_data != blank %}
+                {{ ingredients_data | newline_to_br }}
               {% else %}
                 <p>Ceramide NP</p>
                 <p>Squalane, Butyrospermum Parkii</p>

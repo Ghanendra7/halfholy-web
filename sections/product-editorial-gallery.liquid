@@ -1,4 +1,4 @@
-{% assign editorial_images = product.metafields.custom.editorial_gallery.value %}
+{% assign editorial_images = product.metafields.custom.gallery.value | default: product.metafields.custom.editorial_gallery.value %}
 
 {% if editorial_images != blank or section.blocks.size > 0 %}
   <section class="w-full bg-[#E6E9EA] hairline-b content-visibility-auto">
