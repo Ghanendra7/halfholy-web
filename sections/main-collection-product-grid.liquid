@@ -18,6 +18,10 @@
         --grid-gap-x: {{ section.settings.gap_col_desktop | default: 4 }}px;
         --grid-gap-y: {{ section.settings.gap_row_desktop | default: 24 }}px;
       }
+      #shopify-section-{{ section.id }} .collection-grid-items {
+        column-gap: var(--grid-gap-x, 4px);
+        row-gap: var(--grid-gap-y, 24px);
+      }
     }
   </style>
 
