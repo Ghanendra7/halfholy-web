@@ -1,9 +1,10 @@
 {% comment %}
   Renders an architectural product card matching Halfholy Figma design specifications:
-  - 367x476 aspect ratio Image Container with #F1F1F1 background
+  - 3:4 aspect ratio Image Container with #F1F1F1 background
   - 0.5px #9022B8 purple stroke on hover / active state
+  - On product hover: reveal Gallery's 1st image (product.media[1])
   - Antique Legacy 300 12px title on left
-  - Dynamic price (e.g. "250 USD") revealing on hover on desktop, always visible on mobile
+  - Price revealing on hover (desktop) / active (mobile)
   Usage:
   {% render 'product-card', product: product, is_sample: false, is_active: false %}
 {% endcomment %}
@@ -13,41 +14,89 @@
     assign card_title = 'Holy Lotion'
     assign card_price = '250 USD'
     assign card_url = '#'
+    assign primary_image_url = 'holy-lotion-sample.png' | asset_url
+    assign hover_image_url = 'sample-relic.jpg' | asset_url
+    assign has_hover = true
   else
     assign card_title = product.title | default: 'Holy Lotion'
     assign raw_price = product.price | money_without_trailing_zeros | remove: '$' | remove: '£' | remove: '€' | strip
     assign card_price = raw_price | append: ' ' | append: cart.currency.iso_code
     assign card_url = product.url
+    assign primary_media = product.featured_media | default: product.media[0]
+    assign hover_media = product.media[1]
+    if hover_media != blank
+      assign has_hover = true
+    else
+      assign has_hover = false
+    endif
   endif
 %}
 
 <div class="group relative flex flex-col w-full text-black select-none">
-  <!-- Card Image Container -->
-  <div class="relative w-full aspect-[367/476] bg-[#F1F1F1] flex items-center justify-center p-6 sm:p-8 overflow-hidden transition-all duration-150 outline outline-[0.5px] {% if is_active %}outline-[#9022B8]{% else %}outline-transparent group-hover:outline-[#9022B8] group-focus-within:outline-[#9022B8]{% endif %}">
+  <!-- Card Image Container (3:4 aspect ratio) -->
+  <div class="relative w-full aspect-[3/4] bg-[#F1F1F1] flex items-center justify-center p-[24px] overflow-hidden transition-all duration-150 outline outline-[0.5px] {% if is_active %}outline-[#9022B8]{% else %}outline-transparent group-hover:outline-[#9022B8] group-focus-within:outline-[#9022B8]{% endif %}">
     <a href="{{ card_url }}" class="absolute inset-0 z-10" aria-label="{{ card_title | escape }}"></a>
     
-    {% if is_sample == false and product.featured_media %}
-      {{ product.featured_media | image_url: width: 900 | image_tag: 
-        class: 'max-h-full max-w-full object-contain transition-transform duration-500 ease-out group-hover:scale-[1.02]',
-        loading: 'lazy',
-        decoding: 'async',
-        widths: '300, 450, 600, 900'
-      }}
-    {% else %}
+    {% if is_sample %}
+      <!-- Primary Sample Image -->
       <img 
-        src="{{ 'holy-lotion-sample.png' | asset_url }}" 
+        src="{{ primary_image_url }}" 
         alt="{{ card_title }}" 
-        class="max-h-full max-w-full object-contain transition-transform duration-500 ease-out group-hover:scale-[1.02]"
+        class="max-h-full max-w-full object-contain transition-all duration-300 ease-out {% if has_hover %}group-hover:opacity-0{% else %}group-hover:scale-[1.02]{% endif %}"
         loading="lazy"
         width="480"
-        height="480"
+        height="640"
       >
+      <!-- Gallery's 1st Image on Hover -->
+      {% if has_hover %}
+        <div class="absolute inset-0 flex items-center justify-center p-[24px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-[#F1F1F1]">
+          <img 
+            src="{{ hover_image_url }}" 
+            alt="{{ card_title }} - Detail" 
+            class="max-h-full max-w-full object-contain transition-transform duration-500 ease-out group-hover:scale-[1.02]"
+            loading="lazy"
+            width="480"
+            height="640"
+          >
+        </div>
+      {% endif %}
+    {% else %}
+      {% if primary_media %}
+        <!-- Primary Featured Image -->
+        {{ primary_media | image_url: width: 900 | image_tag: 
+          class: 'max-h-full max-w-full object-contain transition-all duration-300 ease-out',
+          loading: 'lazy',
+          decoding: 'async',
+          widths: '300, 450, 600, 900'
+        }}
+      {% else %}
+        <img 
+          src="{{ 'holy-lotion-sample.png' | asset_url }}" 
+          alt="{{ card_title }}" 
+          class="max-h-full max-w-full object-contain transition-transform duration-300 ease-out"
+          loading="lazy"
+          width="480"
+          height="640"
+        >
+      {% endif %}
+
+      <!-- Gallery's 1st Image on Hover (product.media[1]) -->
+      {% if has_hover %}
+        <div class="absolute inset-0 flex items-center justify-center p-[24px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-[#F1F1F1]">
+          {{ hover_media | image_url: width: 900 | image_tag: 
+            class: 'max-h-full max-w-full object-contain transition-transform duration-500 ease-out group-hover:scale-[1.02]',
+            loading: 'lazy',
+            decoding: 'async',
+            widths: '300, 450, 600, 900'
+          }}
+        </div>
+      {% endif %}
     {% endif %}
   </div>
 
   <!-- Card Info Line -->
-  <div class="w-full mt-[7px] px-0.5 flex items-center justify-between text-[11px] md:text-[12px] leading-[13.8px] font-antique font-light tracking-[-0.005em] text-black">
-    <span class="truncate pr-2">{{ card_title }}</span>
+  <div class="w-full mt-[8px] px-[2px] flex items-center justify-between text-[12px] leading-[14px] font-antique font-light tracking-[-0.005em] text-black">
+    <span class="truncate pr-[8px]">{{ card_title }}</span>
     <span class="shrink-0 font-antique text-black transition-opacity duration-150 ease-out {% if is_active %}opacity-100{% else %}opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 group-active:opacity-100{% endif %}">
       {{ card_price }}
     </span>

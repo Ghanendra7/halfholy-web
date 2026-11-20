@@ -1,18 +1,21 @@
 <footer class="w-full bg-[#E6E9EA] mt-auto select-none" data-footer-section>
   
   <!-- Desktop Layout (matching Figma 'footer' instance 3434:339) -->
-  <div class="hidden md:flex w-full px-4 py-[17px] min-h-[77px] items-end justify-between">
+  <div 
+    class="hidden md:flex w-full min-h-[76px] items-end justify-between"
+    style="padding-top: {{ section.settings.padding_top | default: 16 }}px; padding-bottom: {{ section.settings.padding_bottom | default: 16 }}px; padding-left: {{ section.settings.padding_horizontal | default: 16 }}px; padding-right: {{ section.settings.padding_horizontal | default: 16 }}px;"
+  >
     <!-- Left Navigation Groups -->
-    <div class="flex items-end gap-[51px]">
+    <div class="flex items-end gap-[48px]">
       
       <!-- Col 1: Brand / Year -->
-      <div class="flex flex-col text-[10px] leading-[11.5px] font-mono tracking-[2px] uppercase text-black">
+      <div class="flex flex-col text-[10px] leading-[12px] font-mono tracking-[2px] uppercase text-black">
         <span>halfholy</span>
         <span>2026</span>
       </div>
 
       <!-- Col 2: Contact -->
-      <div class="flex flex-col text-[10px] leading-[11.5px] font-antique font-light tracking-[2px] uppercase text-black">
+      <div class="flex flex-col text-[10px] leading-[12px] font-antique font-light tracking-[2px] uppercase text-black">
         <span>CONTACT</span>
         <a href="{{ section.settings.store_url | default: '/pages/stores' }}" class="hover:opacity-50 transition-opacity">STORE</a>
         <a href="{{ section.settings.contact_url | default: '/pages/contact' }}" class="hover:opacity-50 transition-opacity">CONTACT US</a>
@@ -20,14 +23,14 @@
       </div>
 
       <!-- Col 3: Legal -->
-      <div class="flex flex-col text-[10px] leading-[11.5px] font-antique font-light tracking-[2px] uppercase text-black">
+      <div class="flex flex-col text-[10px] leading-[12px] font-antique font-light tracking-[2px] uppercase text-black">
         <span>LEGAL</span>
         <a href="/policies/privacy-policy" class="hover:opacity-50 transition-opacity">PRIVACY POLICY</a>
         <a href="/policies/terms-of-service" class="hover:opacity-50 transition-opacity">TERMS AND CONDITIONS</a>
       </div>
 
       <!-- Col 4: Social -->
-      <div class="flex flex-col text-[10px] leading-[11.5px] font-antique font-light tracking-[2px] uppercase text-black">
+      <div class="flex flex-col text-[10px] leading-[12px] font-antique font-light tracking-[2px] uppercase text-black">
         <span>SOCIAL</span>
         <a href="{{ settings.social_instagram_link | default: 'https://instagram.com' }}" target="_blank" rel="noopener" class="hover:opacity-50 transition-opacity">INSTAGRAM</a>
         <a href="{{ settings.social_linkedin_link | default: 'https://linkedin.com' }}" target="_blank" rel="noopener" class="hover:opacity-50 transition-opacity">LINKEDIN</a>
@@ -35,7 +38,7 @@
       </div>
 
       <!-- Col 5: About -->
-      <div class="flex flex-col text-[10px] leading-[11.5px] font-mono tracking-[2px] uppercase text-black">
+      <div class="flex flex-col text-[10px] leading-[12px] font-mono tracking-[2px] uppercase text-black">
         <span>ABOUT</span>
         <a href="/policies/shipping-policy" class="hover:opacity-50 transition-opacity">SHIPPING</a>
         <a href="/pages/payment-information" class="hover:opacity-50 transition-opacity">PAYMENT INFORMATION</a>
@@ -58,7 +61,10 @@
   </div>
 
   <!-- Mobile Layout (matching Figma 'MA' frame 3434:434) -->
-  <div class="flex md:hidden w-full px-4 pt-[17px] pb-8 flex-col gap-5">
+  <div 
+    class="flex md:hidden w-full flex-col gap-[20px]"
+    style="padding-top: {{ section.settings.padding_top_mobile | default: 16 }}px; padding-bottom: {{ section.settings.padding_bottom_mobile | default: 32 }}px; padding-left: {{ section.settings.padding_horizontal | default: 16 }}px; padding-right: {{ section.settings.padding_horizontal | default: 16 }}px;"
+  >
     <!-- Top Row: halfholy 2026 + Signature -->
     <div class="w-full flex items-start justify-between">
       <div class="flex flex-col text-[10px] leading-[12px] font-mono tracking-[2px] uppercase text-black">
@@ -113,6 +119,64 @@
 {
   "name": "Footer",
   "settings": [
+    {
+      "type": "header",
+      "content": "Footer Padding Settings"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 8,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop Top Padding",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 8,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop Bottom Padding",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "label": "Horizontal Padding (Desktop & Mobile)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 8,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile Top Padding",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 8,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile Bottom Padding",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Navigation Links"
+    },
     {
       "type": "url",
       "id": "store_url",
