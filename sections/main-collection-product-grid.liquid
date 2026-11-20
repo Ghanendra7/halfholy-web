@@ -41,7 +41,7 @@
         </div>
 
         {% if paginate.pages > 1 %}
-          <div class="mt-[48px] py-[24px] flex justify-center items-center space-x-[24px] text-[10px] font-mono tracking-[2px] uppercase text-black">
+          <div class="mt-[48px] py-[24px] flex justify-center items-center space-x-[24px] text-[10px] leading-[1.2] font-mono tracking-[0.2em] uppercase text-black">
             {% if paginate.previous %}
               <a href="{{ paginate.previous.url }}" class="hover:opacity-50 transition-opacity">&larr; PREVIOUS</a>
             {% endif %}
