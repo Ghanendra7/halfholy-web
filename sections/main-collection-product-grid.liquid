@@ -1,8 +1,40 @@
-<section class="w-full bg-white min-h-[calc(100vh-116px)]">
-  <div class="w-full px-[12px] md:px-[16px] pt-[52px] pb-[40px]">
+<section 
+  id="shopify-section-{{ section.id }}"
+  class="w-full bg-white min-h-[calc(100vh-116px)]"
+  style="
+    --grid-pt: {{ section.settings.padding_top_mobile | default: 52 }}px;
+    --grid-pb: {{ section.settings.padding_bottom_mobile | default: 40 }}px;
+    --grid-px: {{ section.settings.padding_horizontal_mobile | default: 12 }}px;
+    --grid-gap-x: {{ section.settings.gap_col_mobile | default: 2 }}px;
+    --grid-gap-y: {{ section.settings.gap_row_mobile | default: 12 }}px;
+  "
+>
+  <style>
+    @media (min-width: 768px) {
+      #shopify-section-{{ section.id }} {
+        --grid-pt: {{ section.settings.padding_top_desktop | default: 52 }}px;
+        --grid-pb: {{ section.settings.padding_bottom_desktop | default: 40 }}px;
+        --grid-px: {{ section.settings.padding_horizontal_desktop | default: 16 }}px;
+        --grid-gap-x: {{ section.settings.gap_col_desktop | default: 4 }}px;
+        --grid-gap-y: {{ section.settings.gap_row_desktop | default: 24 }}px;
+      }
+    }
+    #shopify-section-{{ section.id }} .collection-grid-container {
+      padding-top: var(--grid-pt);
+      padding-bottom: var(--grid-pb);
+      padding-left: var(--grid-px);
+      padding-right: var(--grid-px);
+    }
+    #shopify-section-{{ section.id }} .collection-grid-items {
+      column-gap: var(--grid-gap-x);
+      row-gap: var(--grid-gap-y);
+    }
+  </style>
+
+  <div class="w-full collection-grid-container">
     {% paginate collection.products by section.settings.products_per_page %}
       {% if collection.products.size > 0 %}
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-x-[2px] md:gap-x-[4px] gap-y-[12px] md:gap-y-[24px]">
+        <div class="grid grid-cols-2 md:grid-cols-4 collection-grid-items">
           {% for product in collection.products %}
             {% render 'product-card', product: product %}
           {% endfor %}
@@ -25,7 +57,7 @@
           Renders 8 sample products matching the Figma "Shop" and "Shop - Mobile" frames.
           Card 2 showcases the active state with purple outline and price display.
         {% endcomment %}
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-x-[2px] md:gap-x-[4px] gap-y-[12px] md:gap-y-[24px]">
+        <div class="grid grid-cols-2 md:grid-cols-4 collection-grid-items">
           {% for i in (1..8) %}
             {% if i == 2 %}
               {% render 'product-card', is_sample: true, is_active: true %}
@@ -51,6 +83,114 @@
       "step": 4,
       "default": 16,
       "label": "Products per page"
+    },
+    {
+      "type": "header",
+      "content": "Desktop Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "min": 20,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop Top Padding",
+      "default": 52
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "min": 12,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop Bottom Padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal_desktop",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop Horizontal Padding",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "gap_col_desktop",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop Column Gap",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "gap_row_desktop",
+      "min": 4,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop Row Gap",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Mobile Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 20,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile Top Padding",
+      "default": 52
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 12,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile Bottom Padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal_mobile",
+      "min": 4,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile Horizontal Padding",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "gap_col_mobile",
+      "min": 0,
+      "max": 16,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile Column Gap",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "gap_row_mobile",
+      "min": 4,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile Row Gap",
+      "default": 12
     }
   ]
 }
