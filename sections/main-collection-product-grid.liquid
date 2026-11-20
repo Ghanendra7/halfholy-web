@@ -2,7 +2,7 @@
   id="shopify-section-{{ section.id }}"
   class="w-full bg-white min-h-[calc(100vh-116px)]"
   style="
-    --grid-pt: {{ section.settings.padding_top_mobile | default: 52 }}px;
+    --grid-pt: {{ section.settings.padding_top_mobile | default: 48 }}px;
     --grid-pb: {{ section.settings.padding_bottom_mobile | default: 40 }}px;
     --grid-px: {{ section.settings.padding_horizontal_mobile | default: 12 }}px;
     --grid-gap-x: {{ section.settings.gap_col_mobile | default: 2 }}px;
@@ -12,7 +12,7 @@
   <style>
     @media (min-width: 768px) {
       #shopify-section-{{ section.id }} {
-        --grid-pt: {{ section.settings.padding_top_desktop | default: 52 }}px;
+        --grid-pt: {{ section.settings.padding_top_desktop | default: 48 }}px;
         --grid-pb: {{ section.settings.padding_bottom_desktop | default: 40 }}px;
         --grid-px: {{ section.settings.padding_horizontal_desktop | default: 16 }}px;
         --grid-gap-x: {{ section.settings.gap_col_desktop | default: 4 }}px;
@@ -96,7 +96,7 @@
       "step": 4,
       "unit": "px",
       "label": "Desktop Top Padding",
-      "default": 52
+      "default": 48
     },
     {
       "type": "range",
@@ -150,7 +150,7 @@
       "step": 4,
       "unit": "px",
       "label": "Mobile Top Padding",
-      "default": 52
+      "default": 48
     },
     {
       "type": "range",
