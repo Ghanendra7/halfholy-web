@@ -1,51 +1,112 @@
-<footer class="w-full hairline-t bg-[#E6E9EA] mt-auto content-visibility-auto">
-  <div class="w-full px-6 md:px-8 py-10 md:py-14">
-    <div class="grid grid-cols-2 md:grid-cols-5 gap-8 text-[11px] font-mono uppercase tracking-wider text-[#0A0A0A]">
-      <!-- Col 1: Year / Brand -->
-      <div class="flex flex-col space-y-1">
-        <span class="font-medium">{{ section.settings.col_1_title | default: 'HALF HOLY' }}</span>
-        <span class="text-[#666666]">{{ section.settings.col_1_subtitle | default: '2026' }}</span>
+<footer class="w-full bg-[#E6E9EA] mt-auto select-none" data-footer-section>
+  
+  <!-- Desktop Layout (matching Figma 'footer' instance 3434:339) -->
+  <div class="hidden md:flex w-full px-4 py-[17px] min-h-[77px] items-end justify-between">
+    <!-- Left Navigation Groups -->
+    <div class="flex items-end gap-[51px]">
+      
+      <!-- Col 1: Brand / Year -->
+      <div class="flex flex-col text-[10px] leading-[11.5px] font-mono tracking-[2px] uppercase text-black">
+        <span>halfholy</span>
+        <span>2026</span>
       </div>
 
       <!-- Col 2: Contact -->
-      <div class="flex flex-col space-y-2">
-        <span class="font-medium">CONTACT</span>
-        <a href="/pages/stores" class="text-[#666666] hover:text-black transition-colors">STORE</a>
-        <a href="/pages/contact" class="text-[#666666] hover:text-black transition-colors">CONTACT US</a>
-        <a href="#newsletter" class="text-[#666666] hover:text-black transition-colors">SUBSCRIBE TO OUR NEWSLETTER</a>
+      <div class="flex flex-col text-[10px] leading-[11.5px] font-antique font-light tracking-[2px] uppercase text-black">
+        <span>CONTACT</span>
+        <a href="{{ section.settings.store_url | default: '/pages/stores' }}" class="hover:opacity-50 transition-opacity">STORE</a>
+        <a href="{{ section.settings.contact_url | default: '/pages/contact' }}" class="hover:opacity-50 transition-opacity">CONTACT US</a>
+        <a href="#newsletter" class="hover:opacity-50 transition-opacity">SUBSCRIBE TO OUR NEWSLETTER</a>
       </div>
 
       <!-- Col 3: Legal -->
-      <div class="flex flex-col space-y-2">
-        <span class="font-medium">LEGAL</span>
-        <a href="/policies/privacy-policy" class="text-[#666666] hover:text-black transition-colors">PRIVACY POLICY</a>
-        <a href="/policies/terms-of-service" class="text-[#666666] hover:text-black transition-colors">TERMS AND CONDITIONS</a>
+      <div class="flex flex-col text-[10px] leading-[11.5px] font-antique font-light tracking-[2px] uppercase text-black">
+        <span>LEGAL</span>
+        <a href="/policies/privacy-policy" class="hover:opacity-50 transition-opacity">PRIVACY POLICY</a>
+        <a href="/policies/terms-of-service" class="hover:opacity-50 transition-opacity">TERMS AND CONDITIONS</a>
       </div>
 
       <!-- Col 4: Social -->
-      <div class="flex flex-col space-y-2">
-        <span class="font-medium">SOCIAL</span>
-        <a href="{{ settings.social_instagram_link | default: '#' }}" target="_blank" rel="noopener" class="text-[#666666] hover:text-black transition-colors">INSTAGRAM</a>
-        <a href="{{ settings.social_linkedin_link | default: '#' }}" target="_blank" rel="noopener" class="text-[#666666] hover:text-black transition-colors">LINKEDIN</a>
-        <a href="{{ settings.social_discord_link | default: '#' }}" target="_blank" rel="noopener" class="text-[#666666] hover:text-black transition-colors">DISCORD</a>
+      <div class="flex flex-col text-[10px] leading-[11.5px] font-antique font-light tracking-[2px] uppercase text-black">
+        <span>SOCIAL</span>
+        <a href="{{ settings.social_instagram_link | default: 'https://instagram.com' }}" target="_blank" rel="noopener" class="hover:opacity-50 transition-opacity">INSTAGRAM</a>
+        <a href="{{ settings.social_linkedin_link | default: 'https://linkedin.com' }}" target="_blank" rel="noopener" class="hover:opacity-50 transition-opacity">LINKEDIN</a>
+        <a href="{{ settings.social_discord_link | default: 'https://discord.com' }}" target="_blank" rel="noopener" class="hover:opacity-50 transition-opacity">DISCORD</a>
       </div>
 
-      <!-- Col 5: About & Script Signature -->
-      <div class="flex flex-col justify-between space-y-2">
-        <div class="flex flex-col space-y-2">
-          <span class="font-medium">ABOUT</span>
-          <a href="/policies/shipping-policy" class="text-[#666666] hover:text-black transition-colors">SHIPPING</a>
-          <a href="/pages/payment-information" class="text-[#666666] hover:text-black transition-colors">PAYMENT INFORMATION</a>
-          <a href="/policies/refund-policy" class="text-[#666666] hover:text-black transition-colors">RETURNS AND EXCHANGES</a>
-        </div>
-        <div class="pt-6 md:pt-0 self-start md:self-end">
-          <span class="font-serif italic text-lg tracking-normal lowercase text-[#0A0A0A]">
-            {{ section.settings.signature_text | default: 'half holy' }}
-          </span>
-        </div>
+      <!-- Col 5: About -->
+      <div class="flex flex-col text-[10px] leading-[11.5px] font-mono tracking-[2px] uppercase text-black">
+        <span>ABOUT</span>
+        <a href="/policies/shipping-policy" class="hover:opacity-50 transition-opacity">SHIPPING</a>
+        <a href="/pages/payment-information" class="hover:opacity-50 transition-opacity">PAYMENT INFORMATION</a>
+        <a href="/policies/refund-policy" class="hover:opacity-50 transition-opacity">RETURNS AND EXCHANGES</a>
       </div>
+
+    </div>
+
+    <!-- Right Signature Script Logo -->
+    <div class="flex items-end shrink-0">
+      <img 
+        src="{{ 'halfholy-signature.svg' | asset_url }}" 
+        alt="halfholy" 
+        width="101" 
+        height="29" 
+        class="w-[101px] h-[29px] object-contain"
+        loading="lazy"
+      >
     </div>
   </div>
+
+  <!-- Mobile Layout (matching Figma 'MA' frame 3434:434) -->
+  <div class="flex md:hidden w-full px-4 pt-[17px] pb-8 flex-col gap-5">
+    <!-- Top Row: halfholy 2026 + Signature -->
+    <div class="w-full flex items-start justify-between">
+      <div class="flex flex-col text-[10px] leading-[12px] font-mono tracking-[2px] uppercase text-black">
+        <span>halfholy</span>
+        <span>2026</span>
+      </div>
+      <img 
+        src="{{ 'halfholy-signature.svg' | asset_url }}" 
+        alt="halfholy" 
+        width="101" 
+        height="29" 
+        class="w-[101px] h-[29px] object-contain"
+        loading="lazy"
+      >
+    </div>
+
+    <!-- Contact Block -->
+    <div class="flex flex-col text-[10px] leading-[12px] font-antique font-light tracking-[2px] uppercase text-black">
+      <span>CONTACT</span>
+      <a href="{{ section.settings.store_url | default: '/pages/stores' }}" class="hover:opacity-50 transition-opacity">STORE</a>
+      <a href="{{ section.settings.contact_url | default: '/pages/contact' }}" class="hover:opacity-50 transition-opacity">CONTACT US</a>
+      <a href="#newsletter" class="hover:opacity-50 transition-opacity">NEWSLETTER</a>
+    </div>
+
+    <!-- Social Block -->
+    <div class="flex flex-col text-[10px] leading-[12px] font-antique font-light tracking-[2px] uppercase text-black">
+      <span>SOCIAL</span>
+      <a href="{{ settings.social_instagram_link | default: 'https://instagram.com' }}" target="_blank" rel="noopener" class="hover:opacity-50 transition-opacity">INSTAGRAM</a>
+      <a href="{{ settings.social_linkedin_link | default: 'https://linkedin.com' }}" target="_blank" rel="noopener" class="hover:opacity-50 transition-opacity">LINKEDIN</a>
+      <a href="{{ settings.social_discord_link | default: 'https://discord.com' }}" target="_blank" rel="noopener" class="hover:opacity-50 transition-opacity">DISCORD</a>
+    </div>
+
+    <!-- Legal Block -->
+    <div class="flex flex-col text-[10px] leading-[12px] font-antique font-light tracking-[2px] uppercase text-black">
+      <span>LEGAL</span>
+      <a href="/policies/privacy-policy" class="hover:opacity-50 transition-opacity">PRIVACY POLICY</a>
+      <a href="/policies/terms-of-service" class="hover:opacity-50 transition-opacity">TERMS AND CONDITIONS</a>
+    </div>
+
+    <!-- About Block -->
+    <div class="flex flex-col text-[10px] leading-[12px] font-mono tracking-[2px] uppercase text-black">
+      <span>ABOUT</span>
+      <a href="/policies/shipping-policy" class="hover:opacity-50 transition-opacity">SHIPPING</a>
+      <a href="/pages/payment-information" class="hover:opacity-50 transition-opacity">PAYMENT INFORMATION</a>
+      <a href="/policies/refund-policy" class="hover:opacity-50 transition-opacity">RETURNS AND EXCHANGES</a>
+    </div>
+  </div>
+
 </footer>
 
 {% schema %}
@@ -53,22 +114,14 @@
   "name": "Footer",
   "settings": [
     {
-      "type": "text",
-      "id": "col_1_title",
-      "label": "Brand Column Title",
-      "default": "HALF HOLY"
+      "type": "url",
+      "id": "store_url",
+      "label": "Store Page URL"
     },
     {
-      "type": "text",
-      "id": "col_1_subtitle",
-      "label": "Brand Column Subtitle",
-      "default": "2026"
-    },
-    {
-      "type": "text",
-      "id": "signature_text",
-      "label": "Signature Text",
-      "default": "half holy"
+      "type": "url",
+      "id": "contact_url",
+      "label": "Contact Page URL"
     }
   ]
 }

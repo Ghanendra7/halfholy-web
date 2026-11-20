@@ -1,31 +1,55 @@
 {% comment %}
-  Renders a product card in the Halfholy architectural grid
+  Renders an architectural product card matching Halfholy Figma design specifications:
+  - 367x476 aspect ratio Image Container with #F1F1F1 background
+  - 0.5px #9022B8 purple stroke on hover / active state
+  - Antique Legacy 300 12px title on left
+  - Dynamic price (e.g. "250 USD") revealing on hover on desktop, always visible on mobile
   Usage:
-  {% render 'product-card', product: product %}
+  {% render 'product-card', product: product, is_sample: false, is_active: false %}
 {% endcomment %}
 
-<div class="group relative bg-[#E6E9EA] hairline-all aspect-3/4 flex flex-col justify-between p-4 transition-all duration-200 hover:border-[#9022B8] hover:z-10">
-  <a href="{{ product.url }}" class="absolute inset-0 z-20" aria-label="{{ product.title | escape }}"></a>
-  
-  <!-- Media Container -->
-  <div class="relative w-full h-full flex items-center justify-center overflow-hidden p-6">
-    {% if product.featured_media %}
-      {{ product.featured_media | image_url: width: 800 | image_tag: 
-        class: 'max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-102',
+{% liquid
+  if is_sample
+    assign card_title = 'Holy Lotion'
+    assign card_price = '250 USD'
+    assign card_url = '#'
+  else
+    assign card_title = product.title | default: 'Holy Lotion'
+    assign raw_price = product.price | money_without_trailing_zeros | remove: '$' | remove: '£' | remove: '€' | strip
+    assign card_price = raw_price | append: ' ' | append: cart.currency.iso_code
+    assign card_url = product.url
+  endif
+%}
+
+<div class="group relative flex flex-col w-full text-black select-none">
+  <!-- Card Image Container -->
+  <div class="relative w-full aspect-[367/476] bg-[#F1F1F1] flex items-center justify-center p-6 sm:p-8 overflow-hidden transition-all duration-150 outline outline-[0.5px] {% if is_active %}outline-[#9022B8]{% else %}outline-transparent group-hover:outline-[#9022B8] group-focus-within:outline-[#9022B8]{% endif %}">
+    <a href="{{ card_url }}" class="absolute inset-0 z-10" aria-label="{{ card_title | escape }}"></a>
+    
+    {% if is_sample == false and product.featured_media %}
+      {{ product.featured_media | image_url: width: 900 | image_tag: 
+        class: 'max-h-full max-w-full object-contain transition-transform duration-500 ease-out group-hover:scale-[1.02]',
         loading: 'lazy',
         decoding: 'async',
-        widths: '300, 450, 600, 800'
+        widths: '300, 450, 600, 900'
       }}
     {% else %}
-      <div class="w-full h-full flex items-center justify-center bg-[#E5E5E5] text-[#999999] text-xs font-mono">
-        NO MEDIA
-      </div>
+      <img 
+        src="{{ 'holy-lotion-sample.png' | asset_url }}" 
+        alt="{{ card_title }}" 
+        class="max-h-full max-w-full object-contain transition-transform duration-500 ease-out group-hover:scale-[1.02]"
+        loading="lazy"
+        width="480"
+        height="480"
+      >
     {% endif %}
   </div>
 
-  <!-- Card Info Bar -->
-  <div class="w-full pt-3 hairline-t flex items-center justify-between text-xs font-normal tracking-tight text-[#0A0A0A]">
-    <span>{{ product.title }}</span>
-    <span class="font-mono text-[11px] text-[#0A0A0A]">{{ product.price | money }}</span>
+  <!-- Card Info Line -->
+  <div class="w-full mt-[7px] px-0.5 flex items-center justify-between text-[11px] md:text-[12px] leading-[13.8px] font-antique font-light tracking-[-0.005em] text-black">
+    <span class="truncate pr-2">{{ card_title }}</span>
+    <span class="shrink-0 font-antique text-black transition-opacity duration-150 ease-out {% if is_active %}opacity-100{% else %}opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 group-active:opacity-100{% endif %}">
+      {{ card_price }}
+    </span>
   </div>
 </div>

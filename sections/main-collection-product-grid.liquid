@@ -1,52 +1,42 @@
-<section class="w-full bg-[#E6E9EA]">
-  {% paginate collection.products by section.settings.products_per_page %}
-    <div class="w-full">
+<section class="w-full bg-white min-h-[calc(100vh-117px)]">
+  <div class="w-full px-[10px] md:px-4 pt-[50px] pb-10">
+    {% paginate collection.products by section.settings.products_per_page %}
       {% if collection.products.size > 0 %}
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 -space-x-[1px] -space-y-[1px]">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-x-2 md:gap-x-1 gap-y-4 md:gap-y-6">
           {% for product in collection.products %}
-            <div>
-              {% render 'product-card', product: product %}
-            </div>
+            {% render 'product-card', product: product %}
           {% endfor %}
         </div>
 
         {% if paginate.pages > 1 %}
-          <div class="p-8 hairline-t flex justify-center items-center space-x-4 text-xs font-mono">
+          <div class="mt-12 py-8 flex justify-center items-center space-x-6 text-[10px] font-mono tracking-[2px] uppercase text-black">
             {% if paginate.previous %}
-              <a href="{{ paginate.previous.url }}" class="underline hover:text-[#9022B8]">&larr; PREVIOUS</a>
+              <a href="{{ paginate.previous.url }}" class="hover:opacity-60 transition-opacity">&larr; PREVIOUS</a>
             {% endif %}
             <span class="text-[#888888]">PAGE {{ paginate.current_page }} OF {{ paginate.pages }}</span>
             {% if paginate.next %}
-              <a href="{{ paginate.next.url }}" class="underline hover:text-[#9022B8]">NEXT &rarr;</a>
+              <a href="{{ paginate.next.url }}" class="hover:opacity-60 transition-opacity">NEXT &rarr;</a>
             {% endif %}
           </div>
         {% endif %}
       {% else %}
-        {% comment %} Showcase Demo Grid matching Halfholy designs until products are created {% endcomment %}
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 -space-x-[1px] -space-y-[1px]">
+        {% comment %}
+          Figma Exact Reference Showcase:
+          Renders 8 sample products matching the Figma "Shop" and "Shop - Mobile" frames.
+          Card 2 showcases the active/hover state with purple outline and price display.
+        {% endcomment %}
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-x-2 md:gap-x-1 gap-y-4 md:gap-y-6">
           {% for i in (1..8) %}
-            <div class="group relative bg-[#E6E9EA] hairline-all aspect-3/4 flex flex-col justify-between p-4 transition-all duration-200 hover:border-[#9022B8] hover:z-10 {% if i == 2 %}border-purple-active{% endif %}">
-              <a href="/products/holy-balm" class="absolute inset-0 z-20" aria-label="Holy Lotion"></a>
-              <div class="relative w-full h-full flex items-center justify-center p-6 overflow-hidden">
-                <img 
-                  src="{{ 'sample-relic.jpg' | asset_url }}" 
-                  alt="Holy Relic" 
-                  class="max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-102"
-                  loading="lazy"
-                  width="350"
-                  height="550"
-                >
-              </div>
-              <div class="w-full pt-3 hairline-t flex items-center justify-between text-xs font-normal tracking-tight text-[#0A0A0A]">
-                <span>{% if i == 1 %}Holy Balm{% else %}Holy Lotion{% endif %}</span>
-                <span class="font-mono text-[11px] text-[#0A0A0A]">{% if i == 1 %}50.00 USD{% else %}250.00 USD{% endif %}</span>
-              </div>
-            </div>
+            {% if i == 2 %}
+              {% render 'product-card', is_sample: true, is_active: true %}
+            {% else %}
+              {% render 'product-card', is_sample: true, is_active: false %}
+            {% endif %}
           {% endfor %}
         </div>
       {% endif %}
-    </div>
-  {% endpaginate %}
+    {% endpaginate %}
+  </div>
 </section>
 
 {% schema %}
@@ -57,7 +47,7 @@
       "type": "range",
       "id": "products_per_page",
       "min": 4,
-      "max": 36,
+      "max": 32,
       "step": 4,
       "default": 16,
       "label": "Products per page"
