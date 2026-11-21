@@ -3,9 +3,14 @@
     "hero": {
       "type": "editorial-hero",
       "settings": {
-        "show_floating_box": true,
-        "box_title": "ENTER THE CEREMONY",
-        "box_button_text": "SUBSCRIBE"
+        "show_floating_banner": true,
+        "autoplay_speed": 4,
+        "product_list": [
+          "holy-balm",
+          "holy-balm-2",
+          "holy-balm-3",
+          "holy-balm-4"
+        ]
       }
     },
     "split_editorial": {

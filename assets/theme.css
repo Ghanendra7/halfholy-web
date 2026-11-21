@@ -2804,3 +2804,197 @@ cart-drawer.is-loading .cart-drawer__content {
     height: auto;
   }
 }
+
+
+.hero-section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  background-color: #9D9D9D;
+  overflow: hidden;
+}
+
+.hero-gallery {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-gallery__slides {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-gallery__slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-gallery__slide.is-active {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 1;
+}
+
+.hero-gallery__link {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.hero-gallery__media {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--header-height, 40px) + 20px) var(--pad) 48px;
+}
+
+.hero-gallery__image {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: calc(100vh - var(--header-height, 40px) - 72px);
+  max-height: calc(100dvh - var(--header-height, 40px) - 72px);
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.hero-gallery__indicators {
+  position: absolute;
+  bottom: 32px;
+  left: 32px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hero-gallery__indicator {
+  width: 24px;
+  height: 2px;
+  background-color: var(--color-brand-border);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background-color 0.3s ease, width 0.3s ease;
+}
+
+.hero-gallery__indicator:hover {
+  background-color: #888888;
+}
+
+.hero-gallery__indicator.is-active {
+  background-color: var(--color-brand-dark);
+  width: 36px;
+}
+
+.hero-floating-banner {
+  position: absolute;
+  bottom: 32px;
+  right: 32px;
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  background-color: rgba(230, 233, 234, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--color-brand-border);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  font-family: var(--font-antique);
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  color: var(--color-brand-dark);
+  text-decoration: none;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  animation: heroBannerFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 3s forwards;
+  transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.hero-floating-banner:hover {
+  background-color: #FFFFFF;
+  border-color: var(--color-brand-purple);
+  box-shadow: 0 6px 20px rgba(144, 34, 184, 0.15);
+}
+
+.hero-floating-banner__text {
+  display: inline-block;
+  transition: opacity 0.25s ease;
+}
+
+.hero-floating-banner__text.is-updating {
+  opacity: 0;
+}
+
+@keyframes heroBannerFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .hero-gallery__media {
+    padding: calc(var(--header-height, 40px) + 12px) var(--pad) 72px;
+  }
+
+  .hero-gallery__image {
+    width: 100%;
+    height: 100%;
+    max-height: calc(100vh - var(--header-height, 40px) - 88px);
+    max-height: calc(100dvh - var(--header-height, 40px) - 88px);
+    object-fit: contain;
+  }
+
+  .hero-gallery__indicators {
+    bottom: 24px;
+    left: var(--pad);
+  }
+
+  .hero-floating-banner {
+    bottom: 24px;
+    right: var(--pad);
+    font-size: 11px;
+    padding: 7px 13px;
+    max-width: calc(100vw - 120px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

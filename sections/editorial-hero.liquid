@@ -1,77 +1,195 @@
-<section class="relative w-full bg-[#E6E9EA] hairline-b overflow-hidden">
-  <div class="relative w-full min-h-[70vh] md:min-h-[85vh] flex items-center justify-center">
-    {% if section.settings.image != blank %}
-      {{ section.settings.image | image_url: width: 2000 | image_tag: 
-        class: 'absolute inset-0 w-full h-full object-cover',
-        loading: 'eager',
-        fetchpriority: 'high'
-      }}
-    {% else %}
-      <img 
-        src="{{ 'hero-campaign.jpg' | asset_url }}" 
-        alt="Halfholy Campaign" 
-        class="absolute inset-0 w-full h-full object-cover object-top opacity-90"
-        loading="eager"
-        fetchpriority="high"
-        width="1024"
-        height="1200"
-      >
-    {% endif %}
+{% liquid
+  assign selected_products = section.settings.product_list
+  assign has_custom_products = false
+  if selected_products != blank and selected_products.count > 0
+    assign has_custom_products = true
+  endif
 
-    {% if section.settings.show_floating_box %}
-      <div class="relative z-10 m-6 p-6 max-w-sm w-full bg-[#E6E9EA]/90 backdrop-blur-md hairline-all shadow-xl space-y-4">
-        {% if section.settings.box_title != blank %}
-          <h2 class="text-xs font-mono uppercase tracking-widest text-[#0A0A0A]">
-            {{ section.settings.box_title }}
-          </h2>
-        {% endif %}
-        {% form 'customer', class: 'space-y-3' %}
-          <input type="hidden" name="contact[tags]" value="newsletter">
-          <input 
-            type="email" 
-            name="contact[email]" 
-            placeholder="Enter your email" 
-            required 
-            class="w-full bg-transparent hairline-all p-2.5 text-xs font-mono text-[#0A0A0A] placeholder-[#888888] focus:border-[#9022B8] focus:outline-none"
+  assign fallback_handles = 'holy-balm,holy-balm-2,holy-balm-3,holy-balm-4' | split: ','
+%}
+
+<section class="hero-section" aria-label="Featured Collection">
+  <hero-gallery class="hero-gallery" data-autoplay-speed="{{ section.settings.autoplay_speed | default: 4 | times: 1000 }}" aria-roledescription="carousel" aria-label="Featured Products">
+    <div class="hero-gallery__slides">
+      {% if has_custom_products %}
+        {% for prod in selected_products limit: 4 %}
+          {% liquid
+            assign slide_title = prod.title
+            if prod.has_only_default_variant == false and prod.selected_or_first_available_variant.title != blank
+              assign slide_title = prod.title | append: ', ' | append: prod.selected_or_first_available_variant.title
+            endif
+            assign slide_img = prod.featured_media | default: prod.featured_image
+            assign img_loading = 'lazy'
+            assign img_fetchpriority = 'auto'
+            if forloop.first
+              assign img_loading = 'eager'
+              assign img_fetchpriority = 'high'
+            endif
+          %}
+          <div 
+            class="hero-gallery__slide {% if forloop.first %}is-active{% endif %}" 
+            data-slide-index="{{ forloop.index0 }}"
+            data-title="{{ slide_title | escape }}"
+            data-url="{{ prod.url }}"
+            aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}"
           >
-          <button 
-            type="submit" 
-            class="w-full bg-[#9022B8] hover:bg-[#7E1DA2] text-white py-2.5 px-4 text-xs font-mono uppercase tracking-wider transition-colors cursor-pointer"
+            <a href="{{ prod.url }}" class="hero-gallery__link" aria-label="{{ slide_title | escape }}">
+              <div class="hero-gallery__media">
+                {% if slide_img %}
+                  {{ slide_img | image_url: width: 2400 | image_tag: 
+                    class: 'hero-gallery__image',
+                    loading: img_loading,
+                    fetchpriority: img_fetchpriority,
+                    decoding: 'async',
+                    widths: '600, 900, 1400, 1800, 2400',
+                    alt: prod.title | escape
+                  }}
+                {% endif %}
+              </div>
+            </a>
+          </div>
+        {% endfor %}
+      {% else %}
+        {% for handle in fallback_handles %}
+          {% liquid
+            assign prod = all_products[handle]
+            assign slide_idx = forloop.index0
+            assign is_first = forloop.first
+            if prod != blank
+              assign slide_title = prod.title
+              if prod.has_only_default_variant == false and prod.selected_or_first_available_variant.title != blank
+                assign slide_title = prod.title | append: ', ' | append: prod.selected_or_first_available_variant.title
+              endif
+              assign slide_url = prod.url
+              assign slide_img = prod.featured_media | default: prod.featured_image
+            else
+              assign slide_title = 'Holy Balm ' | append: forloop.index | append: ', Burgundy / S'
+              assign slide_url = routes.all_products_collection_url
+              assign slide_img = null
+            endif
+
+            assign img_loading = 'lazy'
+            assign img_fetchpriority = 'auto'
+            if is_first
+              assign img_loading = 'eager'
+              assign img_fetchpriority = 'high'
+            endif
+          %}
+          <div 
+            class="hero-gallery__slide {% if is_first %}is-active{% endif %}" 
+            data-slide-index="{{ slide_idx }}"
+            data-title="{{ slide_title | escape }}"
+            data-url="{{ slide_url }}"
+            aria-hidden="{% if is_first %}false{% else %}true{% endif %}"
           >
-            {{ section.settings.box_button_text | default: 'SUBSCRIBE' }}
-          </button>
-        {% endform %}
-      </div>
+            <a href="{{ slide_url }}" class="hero-gallery__link" aria-label="{{ slide_title | escape }}">
+              <div class="hero-gallery__media">
+                {% if slide_img %}
+                  {{ slide_img | image_url: width: 2400 | image_tag: 
+                    class: 'hero-gallery__image',
+                    loading: img_loading,
+                    fetchpriority: img_fetchpriority,
+                    decoding: 'async',
+                    widths: '600, 900, 1400, 1800, 2400',
+                    alt: slide_title | escape
+                  }}
+                {% else %}
+                  <img 
+                    src="{{ 'holy-balm-main.png' | asset_url }}" 
+                    alt="{{ slide_title | escape }}" 
+                    class="hero-gallery__image" 
+                    loading="{{ img_loading }}" 
+                    width="1516" 
+                    height="1964"
+                  >
+                {% endif %}
+              </div>
+            </a>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    <div class="hero-gallery__indicators" role="tablist" aria-label="Gallery slides">
+      {% for i in (1..4) %}
+        {% assign idx = forloop.index0 %}
+        <button 
+          type="button" 
+          class="hero-gallery__indicator {% if forloop.first %}is-active{% endif %}" 
+          data-indicator-index="{{ idx }}"
+          role="tab"
+          aria-label="Go to slide {{ forloop.index }}"
+          aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+        ></button>
+      {% endfor %}
+    </div>
+
+    {% if section.settings.show_floating_banner %}
+      {% liquid
+        assign first_title = 'Holy Balm 1, Burgundy / S'
+        assign first_url = routes.all_products_collection_url
+        if has_custom_products
+          assign first_prod = selected_products.first
+          if first_prod != blank
+            assign first_title = first_prod.title
+            if first_prod.has_only_default_variant == false and first_prod.selected_or_first_available_variant.title != blank
+              assign first_title = first_prod.title | append: ', ' | append: first_prod.selected_or_first_available_variant.title
+            endif
+            assign first_url = first_prod.url
+          endif
+        else
+          assign first_handle = fallback_handles.first
+          assign first_prod = all_products[first_handle]
+          if first_prod != blank
+            assign first_title = first_prod.title
+            if first_prod.has_only_default_variant == false and first_prod.selected_or_first_available_variant.title != blank
+              assign first_title = first_prod.title | append: ', ' | append: first_prod.selected_or_first_available_variant.title
+            endif
+            assign first_url = first_prod.url
+          endif
+        endif
+      %}
+      <a 
+        href="{{ first_url }}" 
+        class="hero-floating-banner" 
+        data-floating-banner 
+        aria-label="View {{ first_title | escape }}"
+      >
+        <span class="hero-floating-banner__text" data-floating-banner-text>
+          {{ first_title }}
+        </span>
+      </a>
     {% endif %}
-  </div>
+  </hero-gallery>
 </section>
 
 {% schema %}
 {
   "name": "Editorial Hero",
+  "tag": "section",
+  "class": "section-hero",
   "settings": [
     {
-      "type": "image_picker",
-      "id": "image",
-      "label": "Hero Image"
+      "type": "product_list",
+      "id": "product_list",
+      "label": "Featured Products (Max 4)",
+      "limit": 4
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 3,
+      "max": 8,
+      "step": 1,
+      "unit": "s",
+      "label": "Slide Duration",
+      "default": 4
     },
     {
       "type": "checkbox",
-      "id": "show_floating_box",
-      "label": "Show Floating Newsletter / Action Box",
+      "id": "show_floating_banner",
+      "label": "Show Floating Product Banner",
       "default": true
-    },
-    {
-      "type": "text",
-      "id": "box_title",
-      "label": "Floating Box Title",
-      "default": "ENTER THE CEREMONY"
-    },
-    {
-      "type": "text",
-      "id": "box_button_text",
-      "label": "Button Label",
-      "default": "SUBSCRIBE"
     }
   ],
   "presets": [
