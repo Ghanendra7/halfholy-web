@@ -1,0 +1,95 @@
+{% if cart.item_count > 0 %}
+  <div class="cart-drawer__body">
+    <ul class="cart-drawer__items" role="list">
+      {% for item in cart.items %}
+        <li class="cart-drawer__item" data-line="{{ forloop.index }}">
+          <div class="cart-drawer__item-media">
+            {% if item.image %}
+              {{ item.image | image_url: width: 240 | image_tag: 
+                class: 'cart-drawer__item-image', 
+                loading: 'lazy', 
+                decoding: 'async',
+                alt: item.title | escape 
+              }}
+            {% else %}
+              <div class="cart-drawer__item-placeholder"></div>
+            {% endif %}
+          </div>
+
+          <div class="cart-drawer__item-details">
+            <div class="cart-drawer__item-header">
+              <a href="{{ item.url }}" class="cart-drawer__item-title">
+                {{ item.product.title }}
+              </a>
+              <span class="cart-drawer__item-price">
+                {{ item.final_line_price | money_without_trailing_zeros | remove: '$' | remove: '£' | remove: '€' | strip }} <span class="cart-drawer__item-currency">{{ cart.currency.iso_code }}</span>
+              </span>
+            </div>
+
+            {% unless item.product.has_only_default_variant %}
+              <div class="cart-drawer__item-variant">
+                {{ item.variant.title }}
+              </div>
+            {% endunless %}
+
+            <div class="cart-drawer__item-actions">
+              <div class="cart-drawer__qty-control" role="group" aria-label="Quantity selector">
+                <button 
+                  type="button" 
+                  class="cart-drawer__qty-btn" 
+                  data-cart-qty-change="-1" 
+                  data-line="{{ forloop.index }}" 
+                  data-current-qty="{{ item.quantity }}" 
+                  aria-label="Decrease quantity"
+                >−</button>
+                <span class="cart-drawer__qty-value" aria-live="polite">{{ item.quantity }}</span>
+                <button 
+                  type="button" 
+                  class="cart-drawer__qty-btn" 
+                  data-cart-qty-change="1" 
+                  data-line="{{ forloop.index }}" 
+                  data-current-qty="{{ item.quantity }}" 
+                  aria-label="Increase quantity"
+                >+</button>
+              </div>
+
+              <button 
+                type="button" 
+                class="cart-drawer__item-remove" 
+                data-cart-remove 
+                data-line="{{ forloop.index }}" 
+                aria-label="Remove {{ item.title | escape }}"
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="cart-drawer__footer">
+    <div class="cart-drawer__summary-row">
+      <span class="cart-drawer__summary-label">Subtotal</span>
+      <span class="cart-drawer__summary-value" data-cart-subtotal>
+        {{ cart.total_price | money_without_trailing_zeros | remove: '$' | remove: '£' | remove: '€' | strip }} <span class="cart-drawer__summary-currency">{{ cart.currency.iso_code }}</span>
+      </span>
+    </div>
+
+    <p class="cart-drawer__tax-note">Shipping & taxes calculated at checkout</p>
+
+    <form action="{{ routes.cart_url }}" method="post" class="cart-drawer__form">
+      <button type="submit" name="checkout" class="cart-drawer__checkout-btn">
+        Proceed to Checkout
+      </button>
+    </form>
+  </div>
+{% else %}
+  <div class="cart-drawer__empty">
+    <p class="cart-drawer__empty-text">Your shopping bag is currently empty.</p>
+    <a href="{{ routes.all_products_collection_url }}" class="cart-drawer__empty-btn">
+      Explore Shop
+    </a>
+  </div>
+{% endif %}

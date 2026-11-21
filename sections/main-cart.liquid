@@ -1,46 +1,66 @@
-<section class="w-full px-6 md:px-12 py-16 bg-[#E6E9EA]">
-  <div class="max-w-2xl mx-auto">
-    <h1 class="text-xs font-mono uppercase tracking-widest hairline-b pb-4 mb-8">Shopping Bag</h1>
+<section class="cart-page">
+  <div class="cart-page__container">
+    <div class="cart-page__header">
+      <h1 class="cart-page__title">Shopping Bag <span class="cart-page__count" data-cart-count>({{ cart.item_count }})</span></h1>
+    </div>
 
     {% if cart.item_count > 0 %}
-      <form action="{{ routes.cart_url }}" method="post" class="space-y-8">
-        <ul class="divide-y divide-[#CBD0D3]">
+      <form action="{{ routes.cart_url }}" method="post" class="cart-page__form">
+        <ul class="cart-page__items" role="list">
           {% for item in cart.items %}
-            <li class="py-6 flex gap-6">
-              {% if item.image %}
-                <div class="w-24 h-28 bg-white border border-[#CBD0D3] p-1 shrink-0">
-                  {{ item.image | image_url: width: 300 | image_tag: class: 'w-full h-full object-contain' }}
+            <li class="cart-page__item">
+              <div class="cart-page__item-media">
+                {% if item.image %}
+                  {{ item.image | image_url: width: 300 | image_tag: class: 'cart-page__item-image', loading: 'lazy', decoding: 'async', alt: item.title | escape }}
+                {% else %}
+                  <div class="cart-page__item-placeholder"></div>
+                {% endif %}
+              </div>
+
+              <div class="cart-page__item-details">
+                <div class="cart-page__item-header">
+                  <a href="{{ item.url }}" class="cart-page__item-title">{{ item.product.title }}</a>
+                  <span class="cart-page__item-price">
+                    {{ item.final_line_price | money_without_trailing_zeros | remove: '$' | remove: '£' | remove: '€' | strip }} <span class="cart-page__item-currency">{{ cart.currency.iso_code }}</span>
+                  </span>
                 </div>
-              {% endif %}
-              <div class="flex-1 flex flex-col justify-between">
-                <div>
-                  <h2 class="text-sm uppercase font-medium">{{ item.product.title }}</h2>
-                  <p class="text-xs font-mono text-[#666666] mt-1">{{ item.final_price | money }}</p>
-                </div>
-                <div class="flex items-center justify-between text-xs font-mono">
-                  <span>Quantity: {{ item.quantity }}</span>
-                  <a href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity=0" class="underline hover:text-[#9022B8]">Remove</a>
+
+                {% unless item.product.has_only_default_variant %}
+                  <div class="cart-page__item-variant">{{ item.variant.title }}</div>
+                {% endunless %}
+
+                <div class="cart-page__item-actions">
+                  <div class="cart-page__qty-control" role="group" aria-label="Quantity selector">
+                    <a href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity={{ item.quantity | minus: 1 }}" class="cart-page__qty-btn" aria-label="Decrease quantity">−</a>
+                    <span class="cart-page__qty-value">{{ item.quantity }}</span>
+                    <a href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity={{ item.quantity | plus: 1 }}" class="cart-page__qty-btn" aria-label="Increase quantity">+</a>
+                  </div>
+
+                  <a href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity=0" class="cart-page__item-remove">Remove</a>
                 </div>
               </div>
             </li>
           {% endfor %}
         </ul>
 
-        <div class="hairline-t pt-6 space-y-4 text-xs font-mono">
-          <div class="flex justify-between uppercase">
-            <span>Subtotal</span>
-            <span>{{ cart.total_price | money }}</span>
+        <div class="cart-page__footer">
+          <div class="cart-page__summary-row">
+            <span class="cart-page__summary-label">Subtotal</span>
+            <span class="cart-page__summary-value">
+              {{ cart.total_price | money_without_trailing_zeros | remove: '$' | remove: '£' | remove: '€' | strip }} <span class="cart-page__summary-currency">{{ cart.currency.iso_code }}</span>
+            </span>
           </div>
-          <button type="submit" name="checkout" class="w-full bg-[#9022B8] hover:bg-[#7E1DA2] text-white py-3 px-6 uppercase tracking-wider transition-colors cursor-pointer">
+          <p class="cart-page__tax-note">Shipping & taxes calculated at checkout</p>
+          <button type="submit" name="checkout" class="cart-page__checkout-btn">
             Proceed to Checkout
           </button>
         </div>
       </form>
     {% else %}
-      <div class="py-16 text-center">
-        <p class="text-xs font-mono uppercase text-[#666666] mb-6">Your shopping bag is empty.</p>
-        <a href="{{ routes.all_products_collection_url }}" class="inline-block hairline-all px-6 py-2.5 text-xs font-mono uppercase hover:bg-black hover:text-white transition-colors">
-          Explore Collection
+      <div class="cart-page__empty">
+        <p class="cart-page__empty-text">Your shopping bag is currently empty.</p>
+        <a href="{{ routes.all_products_collection_url }}" class="cart-page__empty-btn">
+          Explore Shop
         </a>
       </div>
     {% endif %}

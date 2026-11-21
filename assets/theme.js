@@ -25,34 +25,70 @@ class CartDrawer extends HTMLElement {
   constructor() {
     super();
     this.overlay = this.querySelector('[data-cart-overlay]');
-    this.closeBtn = this.querySelector('[data-cart-close]');
 
     if (this.overlay) {
       this.overlay.addEventListener('click', () => this.close());
     }
-    if (this.closeBtn) {
-      this.closeBtn.addEventListener('click', () => this.close());
-    }
+
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && this.classList.contains('active')) this.close();
     });
 
-    // AJAX remove item listener
     this.addEventListener('click', async (e) => {
+      const closeBtn = e.target.closest('[data-cart-close]');
+      if (closeBtn) {
+        if (!closeBtn.getAttribute('href')) {
+          e.preventDefault();
+        }
+        this.close();
+        return;
+      }
+
       const removeBtn = e.target.closest('[data-cart-remove]');
       if (removeBtn) {
         e.preventDefault();
         const line = removeBtn.dataset.line;
         removeBtn.disabled = true;
-        removeBtn.textContent = 'Removing...';
         try {
-          await fetch(`${window.routes.cart_change_url}?line=${line}&quantity=0`, {
-            headers: { 'Accept': 'application/json' }
+          const changeUrl = window.routes.cart_change_url.endsWith('.js') ? window.routes.cart_change_url : `${window.routes.cart_change_url}.js`;
+          await fetch(changeUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({ line: parseInt(line, 10), quantity: 0 })
           });
           await this.updateCart();
         } catch (err) {
-          console.error('Error removing item', err);
+          console.error(err);
         }
+        return;
+      }
+
+      const qtyBtn = e.target.closest('[data-cart-qty-change]');
+      if (qtyBtn) {
+        e.preventDefault();
+        const delta = parseInt(qtyBtn.dataset.cartQtyChange, 10);
+        const currentQty = parseInt(qtyBtn.dataset.currentQty, 10);
+        const newQty = Math.max(0, currentQty + delta);
+        const line = qtyBtn.dataset.line;
+        qtyBtn.disabled = true;
+        try {
+          const changeUrl = window.routes.cart_change_url.endsWith('.js') ? window.routes.cart_change_url : `${window.routes.cart_change_url}.js`;
+          await fetch(changeUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({ line: parseInt(line, 10), quantity: newQty })
+          });
+          await this.updateCart();
+        } catch (err) {
+          console.error(err);
+        }
+        return;
       }
     });
   }
@@ -63,7 +99,8 @@ class CartDrawer extends HTMLElement {
     requestAnimationFrame(() => {
       this.classList.add('active');
       document.body.style.overflow = 'hidden';
-      if (this.closeBtn) this.closeBtn.focus();
+      const closeBtn = this.querySelector('[data-cart-close]');
+      if (closeBtn) closeBtn.focus();
     });
   }
 
@@ -73,31 +110,30 @@ class CartDrawer extends HTMLElement {
     document.body.style.overflow = '';
     setTimeout(() => {
       this.classList.add('hidden');
-    }, 250);
+    }, 350);
   }
 
   async updateCart() {
     try {
+      this.classList.add('is-loading');
       const res = await fetch(`${window.routes.cart_url}?sections=cart-drawer-items`);
       const data = await res.json();
       const html = data['cart-drawer-items'];
       const container = this.querySelector('[data-cart-items-container]');
       if (container && html) {
-        container.innerHTML = html;
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const sectionEl = doc.querySelector('.shopify-section');
+        container.innerHTML = sectionEl ? sectionEl.innerHTML : html;
       }
-      // Update cart count badge and subtotal
       const cartRes = await fetch(window.routes.cart_url + '.js');
       const cartData = await cartRes.json();
       document.querySelectorAll('[data-cart-count]').forEach(el => {
         el.textContent = `(${cartData.item_count})`;
       });
-
-      const subtotalEl = this.querySelector('[data-cart-subtotal]');
-      if (subtotalEl) {
-        subtotalEl.textContent = '$' + (cartData.total_price / 100).toFixed(2);
-      }
     } catch (e) {
-      console.error('Error updating cart', e);
+      console.error(e);
+    } finally {
+      this.classList.remove('is-loading');
     }
   }
 }
@@ -117,7 +153,7 @@ class ProductForm extends HTMLElement {
 
   async onSubmit(e) {
     e.preventDefault();
-    const submitBtn = this.form.querySelector('[type="submit"]');
+    const submitBtn = e.submitter || this.form.querySelector('[type="submit"]');
     const originalText = submitBtn ? submitBtn.innerText : '';
     if (submitBtn) {
       submitBtn.disabled = true;
@@ -126,9 +162,10 @@ class ProductForm extends HTMLElement {
 
     try {
       const formData = new FormData(this.form);
-      const res = await fetch(window.routes.cart_add_url, {
+      const url = window.routes.cart_add_url.endsWith('.js') ? window.routes.cart_add_url : `${window.routes.cart_add_url}.js`;
+      const res = await fetch(url, {
         method: 'POST',
-        headers: { 'Accept': 'application/javascript' },
+        headers: { 'Accept': 'application/json' },
         body: formData
       });
       const data = await res.json();
