@@ -1,10 +1,10 @@
 <cart-drawer class="cart-drawer hidden" aria-modal="true" role="dialog">
-  <!-- Backdrop -->
+  
   <div data-cart-overlay class="cart-drawer__overlay"></div>
 
   <div class="cart-drawer__wrapper">
     <div class="cart-drawer__panel">
-      <!-- Drawer Header -->
+      
       <div class="cart-drawer__header">
         <h2 class="cart-drawer__title">Shopping Bag</h2>
         <button data-cart-close type="button" class="cart-drawer__close" aria-label="Close Shopping Bag">
@@ -12,7 +12,6 @@
         </button>
       </div>
 
-      <!-- Drawer Content -->
       <div data-cart-items-container class="cart-drawer__body space-y-6">
         {% if cart.item_count > 0 %}
           <ul class="divide-y">
@@ -46,7 +45,6 @@
         {% endif %}
       </div>
 
-      <!-- Drawer Footer -->
       <div class="cart-drawer__footer">
         <div class="flex justify-between text-xs font-mono uppercase tracking-wider">
           <span>Subtotal</span>

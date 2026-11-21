@@ -1,45 +1,164 @@
-{% assign editorial_images = product.metafields.custom.gallery.value | default: product.metafields.custom.editorial_gallery.value %}
+{% liquid
+  assign editorial_images = product.metafields.custom.gallery.value | default: product.metafields.custom.editorial_gallery.value
+  assign editorial_text = product.metafields.custom.editorial_statement.value | default: product.metafields.custom.campaign_statement.value | default: product.metafields.custom.statement.value | default: product.metafields.custom.description.value | default: section.settings.text
+  assign heading_text = section.settings.heading | default: 'CAMPAIGN'
+  assign has_meta_images = false
+  if editorial_images != blank and editorial_images.size > 0
+    assign has_meta_images = true
+  endif
+%}
 
-{% if editorial_images != blank or section.blocks.size > 0 %}
-  <section class="w-full bg-[#E6E9EA] hairline-b content-visibility-auto">
-    {% if section.settings.heading != blank %}
-      <div class="px-6 md:px-8 py-4 hairline-b flex items-center justify-between text-xs font-mono uppercase tracking-widest text-[#5C6265]">
-        <span>{{ section.settings.heading }}</span>
-        <span class="text-[#0A0A0A] font-serif italic lowercase tracking-normal">{{ product.title }}</span>
+<section class="campaign-gallery hairline-t" data-editorial-gallery>
+  <campaign-gallery class="campaign-gallery__container">
+    
+    <div class="campaign-gallery__sticky-col">
+      <span class="campaign-gallery__label t2">{{ heading_text }}</span>
+
+      <div class="campaign-gallery__stack" role="tablist" aria-label="Campaign gallery thumbnails">
+        {% if has_meta_images %}
+          {% for img in editorial_images limit: 6 %}
+            <button 
+              type="button" 
+              class="campaign-gallery__stack-btn {% if forloop.first %}is-stacked is-active{% endif %}"
+              data-stack-btn
+              data-stack-index="{{ forloop.index0 }}"
+              aria-label="Scroll to campaign image {{ forloop.index }}"
+            >
+              {{ img | image_url: width: 300 | image_tag: class: 'campaign-gallery__stack-img', loading: 'lazy', decoding: 'async', alt: product.title }}
+            </button>
+          {% endfor %}
+        {% else %}
+          <button 
+            type="button" 
+            class="campaign-gallery__stack-btn is-stacked is-active"
+            data-stack-btn
+            data-stack-index="0"
+            aria-label="Scroll to campaign image 1"
+          >
+            <img src="{{ 'campaign-editorial-1.jpg' | asset_url }}" alt="{{ product.title }} campaign 1" class="campaign-gallery__stack-img" width="122" height="82" loading="lazy" decoding="async">
+          </button>
+          <button 
+            type="button" 
+            class="campaign-gallery__stack-btn"
+            data-stack-btn
+            data-stack-index="1"
+            aria-label="Scroll to campaign image 2"
+          >
+            <img src="{{ 'campaign-editorial-2.jpg' | asset_url }}" alt="{{ product.title }} campaign 2" class="campaign-gallery__stack-img" width="122" height="82" loading="lazy" decoding="async">
+          </button>
+          <button 
+            type="button" 
+            class="campaign-gallery__stack-btn"
+            data-stack-btn
+            data-stack-index="2"
+            aria-label="Scroll to campaign image 3"
+          >
+            <img src="{{ 'campaign-editorial-3.jpg' | asset_url }}" alt="{{ product.title }} campaign 3" class="campaign-gallery__stack-img" width="122" height="82" loading="lazy" decoding="async">
+          </button>
+        {% endif %}
       </div>
-    {% endif %}
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 -space-x-[1px] -space-y-[1px]">
-      {% if editorial_images != blank %}
-        {% for image in editorial_images %}
-          <div class="relative bg-[#E5E5E5] hairline-all aspect-4/5 overflow-hidden group">
-            {{ image | image_url: width: 1400 | image_tag: 
-              class: 'w-full h-full object-cover transition-transform duration-700 group-hover:scale-102',
-              loading: 'lazy',
-              decoding: 'async'
-            }}
+      <div class="campaign-gallery__text p1">
+        {{ editorial_text }}
+      </div>
+    </div>
+
+    <div class="campaign-gallery__scroll-col">
+      {% if has_meta_images %}
+        {% for img in editorial_images limit: 6 %}
+          <div class="campaign-gallery__scroll-item" data-scroll-item data-scroll-index="{{ forloop.index0 }}">
+            {{ img | image_url: width: 1600 | image_tag: class: 'campaign-gallery__scroll-img', loading: 'lazy', decoding: 'async', alt: product.title }}
           </div>
         {% endfor %}
       {% else %}
-        {% for block in section.blocks %}
-          <div class="relative bg-[#E5E5E5] hairline-all aspect-4/5 overflow-hidden group" {{ block.shopify_attributes }}>
-            {% if block.settings.image != blank %}
-              {{ block.settings.image | image_url: width: 1400 | image_tag: 
-                class: 'w-full h-full object-cover transition-transform duration-700 group-hover:scale-102',
-                loading: 'lazy',
-                decoding: 'async'
-              }}
-            {% else %}
-              <div class="w-full h-full flex flex-col items-center justify-center p-6 text-center text-xs font-mono text-[#8E9598]">
-                <span>CAMPAIGN STILL {{ forloop.index }}</span>
-              </div>
-            {% endif %}
-          </div>
-        {% endfor %}
+        <div class="campaign-gallery__scroll-item" data-scroll-item data-scroll-index="0">
+          <img src="{{ 'campaign-editorial-1.jpg' | asset_url }}" alt="{{ product.title }} campaign 1" class="campaign-gallery__scroll-img" width="756" height="820" loading="lazy" decoding="async">
+        </div>
+        <div class="campaign-gallery__scroll-item" data-scroll-item data-scroll-index="1">
+          <img src="{{ 'campaign-editorial-2.jpg' | asset_url }}" alt="{{ product.title }} campaign 2" class="campaign-gallery__scroll-img" width="756" height="820" loading="lazy" decoding="async">
+        </div>
+        <div class="campaign-gallery__scroll-item" data-scroll-item data-scroll-index="2">
+          <img src="{{ 'campaign-editorial-3.jpg' | asset_url }}" alt="{{ product.title }} campaign 3" class="campaign-gallery__scroll-img" width="756" height="820" loading="lazy" decoding="async">
+        </div>
       {% endif %}
     </div>
-  </section>
-{% endif %}
+
+    <div class="campaign-gallery__mobile-slider">
+      <div class="campaign-gallery__mobile-stage">
+        {% if has_meta_images %}
+          {% for img in editorial_images limit: 6 %}
+            <div class="campaign-gallery__mobile-slide {% if forloop.first %}is-active{% endif %}" data-mobile-slide data-slide-index="{{ forloop.index0 }}">
+              {{ img | image_url: width: 900 | image_tag: class: 'campaign-gallery__mobile-img', loading: 'lazy', decoding: 'async', alt: product.title }}
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="campaign-gallery__mobile-slide is-active" data-mobile-slide data-slide-index="0">
+            <img src="{{ 'campaign-editorial-1.jpg' | asset_url }}" alt="{{ product.title }} campaign 1" class="campaign-gallery__mobile-img" width="402" height="440" loading="lazy" decoding="async">
+          </div>
+          <div class="campaign-gallery__mobile-slide" data-mobile-slide data-slide-index="1">
+            <img src="{{ 'campaign-editorial-2.jpg' | asset_url }}" alt="{{ product.title }} campaign 2" class="campaign-gallery__mobile-img" width="402" height="440" loading="lazy" decoding="async">
+          </div>
+          <div class="campaign-gallery__mobile-slide" data-mobile-slide data-slide-index="2">
+            <img src="{{ 'campaign-editorial-3.jpg' | asset_url }}" alt="{{ product.title }} campaign 3" class="campaign-gallery__mobile-img" width="402" height="440" loading="lazy" decoding="async">
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="campaign-gallery__mobile-tabs" role="tablist" aria-label="Mobile campaign gallery tabs">
+        {% if has_meta_images %}
+          {% for img in editorial_images limit: 6 %}
+            <button 
+              type="button" 
+              class="campaign-gallery__mobile-tab {% if forloop.first %}is-active{% endif %}"
+              data-mobile-tab
+              data-mobile-tab-index="{{ forloop.index0 }}"
+              role="tab"
+              aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+              aria-label="View slide {{ forloop.index }}"
+            >
+              {{ img | image_url: width: 160 | image_tag: class: 'campaign-gallery__mobile-tab-img', loading: 'lazy', decoding: 'async', alt: product.title }}
+            </button>
+          {% endfor %}
+        {% else %}
+          <button 
+            type="button" 
+            class="campaign-gallery__mobile-tab is-active"
+            data-mobile-tab
+            data-mobile-tab-index="0"
+            role="tab"
+            aria-selected="true"
+            aria-label="View slide 1"
+          >
+            <img src="{{ 'campaign-editorial-1.jpg' | asset_url }}" alt="{{ product.title }} view 1" class="campaign-gallery__mobile-tab-img" width="76" height="52" loading="lazy" decoding="async">
+          </button>
+          <button 
+            type="button" 
+            class="campaign-gallery__mobile-tab"
+            data-mobile-tab
+            data-mobile-tab-index="1"
+            role="tab"
+            aria-selected="false"
+            aria-label="View slide 2"
+          >
+            <img src="{{ 'campaign-editorial-2.jpg' | asset_url }}" alt="{{ product.title }} view 2" class="campaign-gallery__mobile-tab-img" width="76" height="52" loading="lazy" decoding="async">
+          </button>
+          <button 
+            type="button" 
+            class="campaign-gallery__mobile-tab"
+            data-mobile-tab
+            data-mobile-tab-index="2"
+            role="tab"
+            aria-selected="false"
+            aria-label="View slide 3"
+          >
+            <img src="{{ 'campaign-editorial-3.jpg' | asset_url }}" alt="{{ product.title }} view 3" class="campaign-gallery__mobile-tab-img" width="76" height="52" loading="lazy" decoding="async">
+          </button>
+        {% endif %}
+      </div>
+    </div>
+
+  </campaign-gallery>
+</section>
 
 {% schema %}
 {
@@ -49,30 +168,18 @@
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "CAMPAIGN ARCHIVE"
-    }
-  ],
-  "blocks": [
+      "default": "CAMPAIGN"
+    },
     {
-      "type": "image",
-      "name": "Fallback Image",
-      "settings": [
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Image"
-        }
-      ]
+      "type": "textarea",
+      "id": "text",
+      "label": "Editorial Statement",
+      "default": "The brand's first offering is an everyday, unisex, non-seasonal lip balm designed to elevate an essential, often overlooked product from a simple. The brand's first offering is an everyday, unisex, non-seasonal lip balm designed to elevate an essential, often overlooked product from a simple."
     }
   ],
   "presets": [
     {
-      "name": "Product Editorial Gallery",
-      "blocks": [
-        { "type": "image" },
-        { "type": "image" },
-        { "type": "image" }
-      ]
+      "name": "Product Editorial Gallery"
     }
   ]
 }

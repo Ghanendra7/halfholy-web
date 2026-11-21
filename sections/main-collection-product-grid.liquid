@@ -1,38 +1,22 @@
 <section 
   id="shopify-section-{{ section.id }}"
   class="collection-section"
-  style="
-    --grid-pt: {{ section.settings.padding_top_mobile | default: 48 }}px;
-    --grid-pb: {{ section.settings.padding_bottom_mobile | default: 40 }}px;
-    --grid-px: {{ section.settings.padding_horizontal_mobile | default: 12 }}px;
-    --grid-gap-x: {{ section.settings.gap_col_mobile | default: 2 }}px;
-    --grid-gap-y: {{ section.settings.gap_row_mobile | default: 12 }}px;
-  "
+  aria-label="Products"
 >
-  <style>
-    @media (min-width: 768px) {
-      #shopify-section-{{ section.id }} {
-        --grid-pt: {{ section.settings.padding_top_desktop | default: 48 }}px;
-        --grid-pb: {{ section.settings.padding_bottom_desktop | default: 40 }}px;
-        --grid-px: {{ section.settings.padding_horizontal_desktop | default: 16 }}px;
-        --grid-gap-x: {{ section.settings.gap_col_desktop | default: 4 }}px;
-        --grid-gap-y: {{ section.settings.gap_row_desktop | default: 24 }}px;
-      }
-      #shopify-section-{{ section.id }} .collection-grid-items {
-        column-gap: var(--grid-gap-x, 4px);
-        row-gap: var(--grid-gap-y, 24px);
-      }
-    }
-  </style>
-
   <div class="collection-grid-container">
     {% paginate collection.products by section.settings.products_per_page %}
       {% if collection.products.size > 0 %}
-        <div class="collection-grid-items">
+        <ul class="collection-grid-items" role="list">
           {% for product in collection.products %}
-            {% render 'product-card', product: product %}
+            {% assign is_eager = false %}
+            {% if forloop.index <= 4 %}
+              {% assign is_eager = true %}
+            {% endif %}
+            <li role="listitem">
+              {% render 'product-card', product: product, is_eager: is_eager %}
+            </li>
           {% endfor %}
-        </div>
+        </ul>
 
         {% if paginate.pages > 1 %}
           <div class="collection-pagination">
@@ -46,20 +30,21 @@
           </div>
         {% endif %}
       {% else %}
-        {% comment %}
-          Figma Reference Showcase:
-          Renders 8 sample products matching the Figma "Shop" and "Shop - Mobile" frames.
-          Card 2 showcases the active state with purple outline and price display.
-        {% endcomment %}
-        <div class="collection-grid-items">
+        <ul class="collection-grid-items" role="list">
           {% for i in (1..8) %}
-            {% if i == 2 %}
-              {% render 'product-card', is_sample: true, is_active: true %}
-            {% else %}
-              {% render 'product-card', is_sample: true, is_active: false %}
+            {% assign is_eager = false %}
+            {% if i <= 4 %}
+              {% assign is_eager = true %}
             {% endif %}
+            <li role="listitem">
+              {% if i == 2 %}
+                {% render 'product-card', is_sample: true, is_active: true, is_eager: is_eager %}
+              {% else %}
+                {% render 'product-card', is_sample: true, is_active: false, is_eager: is_eager %}
+              {% endif %}
+            </li>
           {% endfor %}
-        </div>
+        </ul>
       {% endif %}
     {% endpaginate %}
   </div>

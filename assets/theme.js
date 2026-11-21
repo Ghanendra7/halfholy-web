@@ -26,7 +26,7 @@ class CartDrawer extends HTMLElement {
     super();
     this.overlay = this.querySelector('[data-cart-overlay]');
     this.closeBtn = this.querySelector('[data-cart-close]');
-    
+
     if (this.overlay) {
       this.overlay.addEventListener('click', () => this.close());
     }
@@ -166,7 +166,7 @@ class VariantSelector extends HTMLElement {
   onVariantChange() {
     const selectedOptions = Array.from(this.querySelectorAll('input:checked')).map(el => el.value);
     const variantsData = JSON.parse(this.querySelector('[type="application/json"]').textContent);
-    
+
     const currentVariant = variantsData.find(variant => {
       return !variant.options.map((option, index) => {
         return selectedOptions[index] === option;
@@ -215,19 +215,269 @@ customElements.define('variant-selector', VariantSelector);
  * Accordion Drawer for PDP
  */
 class AccordionDrawer extends HTMLElement {
-  constructor() {
-    super();
-    this.summary = this.querySelector('summary');
-    this.icon = this.querySelector('[data-accordion-icon]');
-    
-    if (this.summary) {
-      this.summary.addEventListener('click', () => {
-        const isOpen = this.parentElement.hasAttribute('open');
-        if (this.icon) {
-          this.icon.textContent = isOpen ? '+' : '-';
-        }
+  connectedCallback() {
+    const allDetails = Array.from(this.querySelectorAll('details'));
+
+    function closeItem(target) {
+      if (!target.open || target.classList.contains('is-closing')) return;
+
+      target.classList.add('is-closing');
+      target.classList.remove('is-open');
+      target.style.overflow = 'hidden';
+
+      const startHeight = `${target.offsetHeight}px`;
+      const targetSummary = target.querySelector('summary');
+      const endHeight = `${targetSummary.offsetHeight}px`;
+
+      if (target._faqAnim) target._faqAnim.cancel();
+
+      target._faqAnim = target.animate(
+        { height: [startHeight, endHeight] },
+        { duration: 400, easing: 'ease-in-out' }
+      );
+
+      target._faqAnim.onfinish = () => {
+        target.open = false;
+        target.classList.remove('is-closing');
+        target._faqAnim = null;
+        target.style.height = '';
+        target.style.overflow = '';
+      };
+
+      target._faqAnim.oncancel = () => {
+        target.classList.remove('is-closing');
+        target._faqAnim = null;
+      };
+    }
+
+    function openItem(target) {
+      target.classList.remove('is-closing');
+      target.classList.add('is-open');
+      target.style.overflow = 'hidden';
+
+      const startHeight = `${target.offsetHeight}px`;
+      target.open = true;
+
+      window.requestAnimationFrame(() => {
+        const targetSummary = target.querySelector('summary');
+        const targetContent = target.querySelector('.faq__content');
+        const endHeight = `${targetSummary.offsetHeight + targetContent.offsetHeight}px`;
+
+        if (target._faqAnim) target._faqAnim.cancel();
+
+        target._faqAnim = target.animate(
+          { height: [startHeight, endHeight] },
+          { duration: 400, easing: 'ease-in-out' }
+        );
+
+        target._faqAnim.onfinish = () => {
+          target.open = true;
+          target._faqAnim = null;
+          target.style.height = '';
+          target.style.overflow = '';
+        };
+
+        target._faqAnim.oncancel = () => {
+          target._faqAnim = null;
+        };
       });
     }
+
+    allDetails.forEach((details) => {
+      const summary = details.querySelector('summary');
+      const content = details.querySelector('.faq__content');
+      if (!summary || !content) return;
+
+      if (details.open) {
+        details.classList.add('is-open');
+      }
+
+      summary.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          const willOpen = !details.open;
+          allDetails.forEach((other) => {
+            if (other !== details) {
+              other.open = false;
+              other.classList.remove('is-open', 'is-closing');
+            }
+          });
+          details.open = willOpen;
+          details.classList.toggle('is-open', willOpen);
+          return;
+        }
+
+        const isCurrentlyOpen = details.open && !details.classList.contains('is-closing');
+
+        if (isCurrentlyOpen) {
+          closeItem(details);
+        } else {
+          allDetails.forEach((other) => {
+            if (other !== details && (other.open || other.classList.contains('is-open'))) {
+              closeItem(other);
+            }
+          });
+          openItem(details);
+        }
+      });
+    });
   }
 }
 customElements.define('accordion-drawer', AccordionDrawer);
+
+class ProductGallery extends HTMLElement {
+  connectedCallback() {
+    this.thumbs = Array.from(this.querySelectorAll('[data-thumb-index]'));
+    this.mainImg = this.querySelector('[data-main-image]');
+    this.thumbs.forEach(thumb => {
+      thumb.addEventListener('click', () => this.selectThumb(thumb));
+      thumb.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          this.selectThumb(thumb);
+        }
+      });
+    });
+
+    const samplePicker = this.querySelector('[data-sample-variant-picker]');
+    if (samplePicker) {
+      samplePicker.querySelectorAll('[data-option-group]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const group = btn.dataset.optionGroup;
+          samplePicker.querySelectorAll(`[data-option-group="${group}"]`).forEach(b => b.classList.remove('is-selected'));
+          btn.classList.add('is-selected');
+        });
+      });
+    }
+  }
+
+  selectThumb(thumb) {
+    this.thumbs.forEach(t => {
+      t.classList.remove('is-active');
+      t.setAttribute('aria-selected', 'false');
+    });
+    thumb.classList.add('is-active');
+    thumb.setAttribute('aria-selected', 'true');
+    const fullSrc = thumb.dataset.fullSrc;
+    if (fullSrc && this.mainImg) {
+      this.mainImg.src = fullSrc;
+      this.mainImg.srcset = '';
+    }
+  }
+}
+customElements.define('product-gallery', ProductGallery);
+
+
+class CampaignGallery extends HTMLElement {
+  connectedCallback() {
+    this.initDesktop();
+    this.initMobile();
+  }
+
+  initDesktop() {
+    const stickyCol = this.querySelector('.campaign-gallery__sticky-col');
+    const scrollItems = Array.from(this.querySelectorAll('[data-scroll-item]'));
+    const stackBtns = Array.from(this.querySelectorAll('[data-stack-btn]'));
+    if (!stickyCol || !scrollItems.length || !stackBtns.length) return;
+
+    stackBtns.forEach((btn, index) => {
+      btn.addEventListener('click', () => {
+        if (scrollItems[index]) {
+          scrollItems[index].scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+
+    const thumbHeight = 82;
+    const totalThumbs = stackBtns.length;
+
+    const updateStack = () => {
+      if (window.innerWidth <= 767) return;
+
+      const vh = window.innerHeight;
+      const baseStackTop = Math.max(64, (vh - totalThumbs * thumbHeight) / 2);
+      const stickyRect = stickyCol.getBoundingClientRect();
+
+      let closestIndex = 0;
+      let minDistance = Infinity;
+
+      scrollItems.forEach((item, index) => {
+        const itemRect = item.getBoundingClientRect();
+        const itemCenterInSticky = (itemRect.top + itemRect.height / 2) - stickyRect.top;
+        const stackY = baseStackTop + index * thumbHeight;
+        const targetY = itemCenterInSticky - thumbHeight / 2;
+        const finalY = Math.max(stackY, targetY);
+
+        const btn = stackBtns[index];
+        if (btn) {
+          btn.style.transform = `translate3d(0, ${Math.round(finalY)}px, 0)`;
+        }
+
+        const dist = Math.abs(itemRect.top + itemRect.height / 2 - vh / 2);
+        if (dist < minDistance) {
+          minDistance = dist;
+          closestIndex = index;
+        }
+      });
+
+      stackBtns.forEach((b, i) => {
+        if (i === closestIndex) {
+          b.classList.add('is-active');
+        } else {
+          b.classList.remove('is-active');
+        }
+      });
+    };
+
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          updateStack();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          window.addEventListener('scroll', onScroll, { passive: true });
+          window.addEventListener('resize', onScroll, { passive: true });
+          updateStack();
+        } else {
+          window.removeEventListener('scroll', onScroll);
+          window.removeEventListener('resize', onScroll);
+        }
+      });
+    }, { rootMargin: '300px 0px' });
+
+    sectionObserver.observe(this);
+    updateStack();
+  }
+
+  initMobile() {
+    const mobileTabs = Array.from(this.querySelectorAll('[data-mobile-tab]'));
+    const mobileSlides = Array.from(this.querySelectorAll('[data-mobile-slide]'));
+    if (!mobileTabs.length || !mobileSlides.length) return;
+
+    mobileTabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => {
+        mobileTabs.forEach(t => {
+          t.classList.remove('is-active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        mobileSlides.forEach(s => s.classList.remove('is-active'));
+
+        tab.classList.add('is-active');
+        tab.setAttribute('aria-selected', 'true');
+        if (mobileSlides[index]) {
+          mobileSlides[index].classList.add('is-active');
+        }
+      });
+    });
+  }
+}
+customElements.define('campaign-gallery', CampaignGallery);

@@ -26,7 +26,6 @@
   <link rel="apple-touch-icon" sizes="180x180" href="{{ 'apple-touch-icon.png' | asset_url }}">
 {%- endif -%}
 
-<!-- Open Graph / Facebook -->
 <meta property="og:site_name" content="{{ shop.name }}">
 <meta property="og:url" content="{{ canonical_url }}">
 <meta property="og:title" content="{{ page_title | default: shop.name }}">
@@ -39,7 +38,6 @@
   <meta property="og:image:height" content="{{ page_image.height }}">
 {%- endif -%}
 
-<!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ page_title | default: shop.name }}">
 <meta name="twitter:description" content="{{ page_description | default: shop.description | escape }}">

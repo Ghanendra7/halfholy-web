@@ -1,18 +1,8 @@
-{% comment %}
-  Renders an architectural product card matching Halfholy Figma design specifications:
-  - 3:4 aspect ratio Image Container with full cover object-cover
-  - 0.5px #9022B8 purple stroke on hover / active state
-  - On product hover: reveal Gallery's 1st image from custom.gallery metafield (dedicated for editorial photoshots)
-  - Antique Legacy 300 12px title on left
-  - Price revealing on hover (desktop) / active (mobile)
-  Usage:
-  {% render 'product-card', product: product, is_sample: false, is_active: false %}
-{% endcomment %}
-
 {% liquid
   if is_sample
     assign card_title = 'Holy Lotion'
-    assign card_price = '250 USD'
+    assign card_price_amount = '250'
+    assign card_currency = 'USD'
     assign card_url = '#'
     assign primary_image_url = 'holy-lotion-sample.png' | asset_url
     assign hover_image_url = 'sample-relic.jpg' | asset_url
@@ -20,15 +10,14 @@
   else
     assign card_title = product.title | default: 'Holy Lotion'
     assign raw_price = product.price | money_without_trailing_zeros | remove: '$' | remove: '£' | remove: '€' | strip
-    assign card_price = raw_price | append: ' ' | append: cart.currency.iso_code
+    assign card_price_amount = raw_price
+    assign card_currency = cart.currency.iso_code
     assign card_url = product.url
     assign primary_media = product.featured_media | default: product.media[0]
 
-    # Gallery metafield for editorial photoshots
     assign hover_image = nil
     assign gallery_files = product.metafields.custom.gallery.value | default: product.metafields.custom.editorial_gallery.value
 
-    # Extract first valid image from gallery metafield list
     if gallery_files.size > 0
       for file in gallery_files
         if file != blank
@@ -48,7 +37,6 @@
         endif
       endfor
     elsif gallery_files != blank and gallery_files.size == nil
-      # Single file reference fallback
       if gallery_files.preview_image != blank
         assign hover_image = gallery_files.preview_image
       elsif gallery_files.image != blank
@@ -58,7 +46,6 @@
       endif
     endif
 
-    # Fallback to secondary media if gallery metafield has no images
     if hover_image == nil and product.media.size > 1
       assign hover_image = product.media[1].preview_image | default: product.media[1]
     endif
@@ -69,26 +56,35 @@
       assign has_hover = false
     endif
   endif
+
+  if is_eager
+    assign img_loading = 'eager'
+    assign img_fetchpriority = 'high'
+  else
+    assign img_loading = 'lazy'
+    assign img_fetchpriority = 'auto'
+  endif
 %}
 
-<div class="product-card {% if is_active %}product-card--active{% endif %}">
-  <!-- Card Image Container (3:4 aspect ratio, full bleed object-cover) -->
+<a href="{{ card_url }}" class="product-card {% if is_active %}product-card--active{% endif %}" aria-label="{{ card_title | escape }}, {{ card_price_amount }} {{ card_currency }}">
+  
   <div class="product-card__media">
-    <a href="{{ card_url }}" class="product-card__link" aria-label="{{ card_title | escape }}"></a>
     
     {% if is_sample %}
-      <!-- Primary Sample Image -->
+      
       <img 
         src="{{ primary_image_url }}" 
         alt="{{ card_title }}" 
         class="product-card__image"
-        loading="lazy"
+        loading="{{ img_loading }}"
+        fetchpriority="{{ img_fetchpriority }}"
+        decoding="async"
         width="480"
         height="640"
       >
-      <!-- Gallery's 1st Image on Hover -->
+      
       {% if has_hover %}
-        <div class="product-card__hover-media">
+        <div class="product-card__hover-media" aria-hidden="true">
           <img 
             src="{{ hover_image_url }}" 
             alt="{{ card_title }} - Editorial Detail" 
@@ -100,10 +96,11 @@
       {% endif %}
     {% else %}
       {% if primary_media %}
-        <!-- Primary Featured Image (fully covering container) -->
+        
         {{ primary_media | image_url: width: 900 | image_tag: 
           class: 'product-card__image',
-          loading: 'lazy',
+          loading: img_loading,
+          fetchpriority: img_fetchpriority,
           decoding: 'async',
           widths: '300, 450, 600, 900'
         }}
@@ -112,15 +109,16 @@
           src="{{ 'holy-lotion-sample.png' | asset_url }}" 
           alt="{{ card_title }}" 
           class="product-card__image"
-          loading="lazy"
+          loading="{{ img_loading }}"
+          fetchpriority="{{ img_fetchpriority }}"
+          decoding="async"
           width="480"
           height="640"
         >
       {% endif %}
 
-      <!-- Gallery's 1st Image on Hover -->
       {% if has_hover and hover_image != nil %}
-        <div class="product-card__hover-media">
+        <div class="product-card__hover-media" aria-hidden="true">
           {% if hover_image.src != blank or hover_image.preview_image != blank or hover_image.width != blank %}
             {{ hover_image | image_url: width: 900 | image_tag: 
               loading: 'lazy',
@@ -141,11 +139,10 @@
     {% endif %}
   </div>
 
-  <!-- Card Info Line -->
   <div class="product-card__info">
-    <span class="product-card__title">{{ card_title }}</span>
-    <span class="product-card__price {% if is_active %}is-visible{% endif %}">
-      {{ card_price }}
+    <span class="product-card__title t2">{{ card_title }}</span>
+    <span class="product-card__price t2 {% if is_active %}is-visible{% endif %}">
+      {{ card_price_amount }} <span class="product-card__currency t4">{{ card_currency }}</span>
     </span>
   </div>
-</div>
+</a>
