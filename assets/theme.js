@@ -110,7 +110,7 @@ class CartDrawer extends HTMLElement {
     document.body.style.overflow = '';
     setTimeout(() => {
       this.classList.add('hidden');
-    }, 350);
+    }, 400);
   }
 
   async updateCart() {
