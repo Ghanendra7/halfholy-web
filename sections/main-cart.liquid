@@ -1,7 +1,7 @@
 <section class="cart-page">
   <div class="cart-page__container">
     <div class="cart-page__header">
-      <h1 class="cart-page__title">Shopping Bag <span class="cart-page__count" data-cart-count>({{ cart.item_count }})</span></h1>
+      <h1 class="cart-page__title">Cart <span class="cart-page__count" data-cart-count>({{ cart.item_count }})</span></h1>
     </div>
 
     {% if cart.item_count > 0 %}
@@ -9,13 +9,13 @@
         <ul class="cart-page__items" role="list">
           {% for item in cart.items %}
             <li class="cart-page__item">
-              <div class="cart-page__item-media">
+              <a href="{{ item.url }}" class="cart-page__item-media" aria-label="{{ item.title | escape }}">
                 {% if item.image %}
                   {{ item.image | image_url: width: 300 | image_tag: class: 'cart-page__item-image', loading: 'lazy', decoding: 'async', alt: item.title | escape }}
                 {% else %}
                   <div class="cart-page__item-placeholder"></div>
                 {% endif %}
-              </div>
+              </a>
 
               <div class="cart-page__item-details">
                 <div class="cart-page__item-header">
@@ -58,7 +58,7 @@
       </form>
     {% else %}
       <div class="cart-page__empty">
-        <p class="cart-page__empty-text">Your shopping bag is currently empty.</p>
+        <p class="cart-page__empty-text">Your cart is currently empty.</p>
         <a href="{{ routes.all_products_collection_url }}" class="btn btn--outline cart-page__empty-btn">
           Explore Shop
         </a>

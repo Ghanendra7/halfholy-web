@@ -3,7 +3,7 @@
     <ul class="cart-drawer__items" role="list">
       {% for item in cart.items %}
         <li class="cart-drawer__item" data-line="{{ forloop.index }}">
-          <div class="cart-drawer__item-media">
+          <a href="{{ item.url }}" class="cart-drawer__item-media" aria-label="{{ item.title | escape }}">
             {% if item.image %}
               {{ item.image | image_url: width: 240 | image_tag: 
                 class: 'cart-drawer__item-image', 
@@ -14,7 +14,7 @@
             {% else %}
               <div class="cart-drawer__item-placeholder"></div>
             {% endif %}
-          </div>
+          </a>
 
           <div class="cart-drawer__item-details">
             <div class="cart-drawer__item-header">
@@ -87,7 +87,7 @@
   </div>
 {% else %}
   <div class="cart-drawer__empty">
-    <p class="cart-drawer__empty-text">Your shopping bag is currently empty.</p>
+    <p class="cart-drawer__empty-text">Your cart is currently empty.</p>
     <a href="{{ routes.all_products_collection_url }}" class="btn btn--outline cart-drawer__empty-btn">
       Explore Shop
     </a>
