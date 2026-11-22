@@ -29,8 +29,7 @@
 
     {{ 'AntiqueLegacy-Light.otf' | asset_url | preload_tag: as: 'font', type: 'font/otf', crossorigin: 'anonymous' }}
     {{ 'FragmentMono-Regular.ttf' | asset_url | preload_tag: as: 'font', type: 'font/ttf', crossorigin: 'anonymous' }}
-    {% assign clean_theme_css = 'theme.css' | asset_url | split: '?' | first %}
-    <link rel="stylesheet" href="{{ clean_theme_css }}">
+    {{ 'theme.css' | asset_url | stylesheet_tag: preload: true }}
 
     <style>
       @font-face {
