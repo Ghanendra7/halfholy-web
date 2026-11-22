@@ -237,18 +237,19 @@
         role="complementary"
         aria-label="Special Offer"
       >
+        <button
+          type="button"
+          class="btn-close hero-floating-modal__close"
+          data-hero-modal-close
+          aria-label="Close special offer"
+        >
+          {% render 'icon-close' %}
+        </button>
+
         <div class="hero-floating-modal__header">
           <span class="hero-floating-modal__title p1">
             {{ section.settings.newsletter_title | default: 'Join for 10% off your first order' }}
           </span>
-          <button
-            type="button"
-            class="hero-floating-modal__close"
-            data-hero-modal-close
-            aria-label="Close special offer"
-          >
-            &times;
-          </button>
         </div>
 
         {% form 'customer', class: 'hero-floating-modal__form' %}
