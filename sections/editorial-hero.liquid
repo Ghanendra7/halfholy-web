@@ -8,166 +8,315 @@
   assign fallback_handles = 'holy-balm,holy-balm-2,holy-balm-3,holy-balm-4' | split: ','
 %}
 
-<section class="hero-section" aria-label="Featured Collection">
-  <hero-gallery class="hero-gallery" data-autoplay-speed="{{ section.settings.autoplay_speed | default: 4 | times: 1000 }}" aria-roledescription="carousel" aria-label="Featured Products">
-    <div class="hero-gallery__slides">
-      {% if has_custom_products %}
-        {% for prod in selected_products limit: 4 %}
-          {% liquid
-            assign slide_title = prod.title
-            if prod.has_only_default_variant == false and prod.selected_or_first_available_variant.title != blank
-              assign slide_title = prod.title | append: ', ' | append: prod.selected_or_first_available_variant.title
+<section
+  id="shopify-section-{{ section.id }}"
+  class="hero-section"
+  data-header-color="light"
+  aria-label="Hero Showcase"
+>
+  <hero-section
+    class="hero-container"
+    data-autoplay-speed="{{ section.settings.autoplay_speed | default: 4 | times: 1000 }}"
+    aria-roledescription="carousel"
+    aria-label="Featured Product Hero"
+  >
+    {% comment %} Fullscreen Background Slides (Active Product Gallery Image) {% endcomment %}
+    <div class="hero-slides" aria-live="polite">
+      {% for i in (0..3) %}
+        {% liquid
+          assign item_product = null
+          assign item_title = 'Holy Balm'
+          assign item_url = routes.all_products_collection_url
+          assign bg_image_obj = null
+          assign fallback_bg_asset = 'campaign-editorial-1.jpg'
+
+          if i == 0
+            assign fallback_bg_asset = 'campaign-editorial-1.jpg'
+          elsif i == 1
+            assign fallback_bg_asset = 'campaign-editorial-2.jpg'
+          elsif i == 2
+            assign fallback_bg_asset = 'campaign-editorial-3.jpg'
+          elsif i == 3
+            assign fallback_bg_asset = 'faq-campaign-image.jpg'
+          endif
+
+          if has_custom_products
+            if selected_products[i] != blank
+              assign item_product = selected_products[i]
             endif
-            assign slide_img = prod.featured_media | default: prod.featured_image
-            assign img_loading = 'lazy'
-            assign img_fetchpriority = 'auto'
-            if forloop.first
-              assign img_loading = 'eager'
-              assign img_fetchpriority = 'high'
+          else
+            assign handle = fallback_handles[i]
+            if all_products[handle] != blank
+              assign item_product = all_products[handle]
+            elsif collections.all.products[i] != blank
+              assign item_product = collections.all.products[i]
             endif
-          %}
-          <div 
-            class="hero-gallery__slide {% if forloop.first %}is-active{% endif %}" 
-            data-slide-index="{{ forloop.index0 }}"
-            data-title="{{ slide_title | escape }}"
-            data-url="{{ prod.url }}"
-            aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}"
-          >
-            <a href="{{ prod.url }}" class="hero-gallery__link" aria-label="{{ slide_title | escape }}">
-              <div class="hero-gallery__media">
-                {% if slide_img %}
-                  {{ slide_img | image_url: width: 2400 | image_tag: 
-                    class: 'hero-gallery__image',
-                    loading: img_loading,
-                    fetchpriority: img_fetchpriority,
-                    decoding: 'async',
-                    widths: '600, 900, 1400, 1800, 2400',
-                    alt: prod.title | escape
-                  }}
-                {% endif %}
-              </div>
-            </a>
-          </div>
-        {% endfor %}
-      {% else %}
-        {% for handle in fallback_handles %}
-          {% liquid
-            assign prod = all_products[handle]
-            assign slide_idx = forloop.index0
-            assign is_first = forloop.first
-            if prod != blank
-              assign slide_title = prod.title
-              if prod.has_only_default_variant == false and prod.selected_or_first_available_variant.title != blank
-                assign slide_title = prod.title | append: ', ' | append: prod.selected_or_first_available_variant.title
-              endif
-              assign slide_url = prod.url
-              assign slide_img = prod.featured_media | default: prod.featured_image
-            else
-              assign slide_title = 'Holy Balm ' | append: forloop.index | append: ', Burgundy / S'
-              assign slide_url = routes.all_products_collection_url
-              assign slide_img = null
+          endif
+
+          if item_product != blank
+            assign item_title = item_product.title
+            assign item_url = item_product.url
+
+            assign gal_files = item_product.metafields.custom.gallery.value | default: item_product.metafields.custom.editorial_gallery.value
+            if gal_files != blank
+              for g in gal_files
+                if g.preview_image != blank
+                  assign bg_image_obj = g.preview_image
+                  break
+                elsif g.image != blank
+                  assign bg_image_obj = g.image
+                  break
+                elsif g.src != blank
+                  assign bg_image_obj = g
+                  break
+                elsif g.url != blank
+                  assign bg_image_obj = g
+                  break
+                endif
+              endfor
             endif
 
-            assign img_loading = 'lazy'
-            assign img_fetchpriority = 'auto'
-            if is_first
-              assign img_loading = 'eager'
-              assign img_fetchpriority = 'high'
+            if bg_image_obj == null and item_product.media.size > 1
+              assign bg_image_obj = item_product.media[1].preview_image | default: item_product.media[1]
             endif
-          %}
-          <div 
-            class="hero-gallery__slide {% if is_first %}is-active{% endif %}" 
-            data-slide-index="{{ slide_idx }}"
-            data-title="{{ slide_title | escape }}"
-            data-url="{{ slide_url }}"
-            aria-hidden="{% if is_first %}false{% else %}true{% endif %}"
-          >
-            <a href="{{ slide_url }}" class="hero-gallery__link" aria-label="{{ slide_title | escape }}">
-              <div class="hero-gallery__media">
-                {% if slide_img %}
-                  {{ slide_img | image_url: width: 2400 | image_tag: 
-                    class: 'hero-gallery__image',
-                    loading: img_loading,
-                    fetchpriority: img_fetchpriority,
-                    decoding: 'async',
-                    widths: '600, 900, 1400, 1800, 2400',
-                    alt: slide_title | escape
-                  }}
-                {% else %}
-                  <img 
-                    src="{{ 'holy-balm-main.png' | asset_url }}" 
-                    alt="{{ slide_title | escape }}" 
-                    class="hero-gallery__image" 
-                    loading="{{ img_loading }}" 
-                    width="1516" 
-                    height="1964"
-                  >
-                {% endif %}
-              </div>
-            </a>
-          </div>
-        {% endfor %}
-      {% endif %}
-    </div>
 
-    <div class="hero-gallery__indicators" role="tablist" aria-label="Gallery slides">
-      {% for i in (1..4) %}
-        {% assign idx = forloop.index0 %}
-        <button 
-          type="button" 
-          class="hero-gallery__indicator {% if forloop.first %}is-active{% endif %}" 
-          data-indicator-index="{{ idx }}"
-          role="tab"
-          aria-label="Go to slide {{ forloop.index }}"
-          aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
-        ></button>
+            if bg_image_obj == null and item_product.featured_media != blank
+              assign bg_image_obj = item_product.featured_media.preview_image | default: item_product.featured_media
+            endif
+          endif
+
+          assign is_slide_active = false
+          assign img_loading = 'lazy'
+          assign img_fetchpriority = 'auto'
+          if forloop.first
+            assign is_slide_active = true
+            assign img_loading = 'eager'
+            assign img_fetchpriority = 'high'
+            assign initial_first_title = item_title
+            assign initial_first_url = item_url
+          endif
+        %}
+
+        <div
+          class="hero-slide {% if is_slide_active %}is-active{% endif %}"
+          data-hero-slide
+          data-slide-index="{{ forloop.index0 }}"
+          data-product-title="{{ item_title | escape }}"
+          data-product-url="{{ item_url }}"
+          aria-hidden="{% if is_slide_active %}false{% else %}true{% endif %}"
+        >
+          {% if bg_image_obj != blank %}
+            {{
+              bg_image_obj
+              | image_url: width: 2400
+              | image_tag:
+                class: 'hero-slide__img',
+                loading: img_loading,
+                fetchpriority: img_fetchpriority,
+                decoding: 'async',
+                widths: '600, 900, 1400, 1800, 2400',
+                alt: item_title
+            }}
+          {% else %}
+            <img
+              src="{{ fallback_bg_asset | asset_url }}"
+              alt="{{ item_title | escape }}"
+              class="hero-slide__img"
+              loading="{% if is_slide_active %}eager{% else %}lazy{% endif %}"
+              {% if is_slide_active %}
+                fetchpriority="high"
+              {% endif %}
+              decoding="async"
+              width="1512"
+              height="982"
+            >
+          {% endif %}
+        </div>
       {% endfor %}
     </div>
 
-    {% if section.settings.show_floating_banner %}
-      {% liquid
-        assign first_title = 'Holy Balm 1, Burgundy / S'
-        assign first_url = routes.all_products_collection_url
-        if has_custom_products
-          assign first_prod = selected_products.first
-          if first_prod != blank
-            assign first_title = first_prod.title
-            if first_prod.has_only_default_variant == false and first_prod.selected_or_first_available_variant.title != blank
-              assign first_title = first_prod.title | append: ', ' | append: first_prod.selected_or_first_available_variant.title
-            endif
-            assign first_url = first_prod.url
-          endif
-        else
-          assign first_handle = fallback_handles.first
-          assign first_prod = all_products[first_handle]
-          if first_prod != blank
-            assign first_title = first_prod.title
-            if first_prod.has_only_default_variant == false and first_prod.selected_or_first_available_variant.title != blank
-              assign first_title = first_prod.title | append: ', ' | append: first_prod.selected_or_first_available_variant.title
-            endif
-            assign first_url = first_prod.url
-          endif
-        endif
-      %}
-      <a 
-        href="{{ first_url }}" 
-        class="hero-floating-banner" 
-        data-floating-banner 
-        aria-label="View {{ first_title | escape }}"
+    {% comment %} Left Branding Mark: Script Logo slightly overlapping Product Name {% endcomment %}
+    <div class="hero-brand-mark">
+      <div class="hero-brand-mark__signature" aria-hidden="true">
+        {% render 'halfholy-signature', color: 'white', class: 'hero-brand-mark__signature-svg' %}
+      </div>
+      <a
+        href="{{ initial_first_url | default: routes.all_products_collection_url }}"
+        class="hero-brand-mark__title-link"
+        data-hero-product-link
+        aria-label="View {{ initial_first_title | default: 'Holy Balm' | escape }}"
       >
-        <span class="hero-floating-banner__text" data-floating-banner-text>
-          {{ first_title }}
+        <span class="hero-brand-mark__title t1" data-hero-product-title>
+          {{ initial_first_title | default: 'Holy Balm' }}
         </span>
       </a>
+    </div>
+
+    {% comment %} Right Side: 4 Product Thumbnails (Horizontal on Desktop, Vertical on Mobile) {% endcomment %}
+    <div
+      class="hero-thumbnails"
+      role="tablist"
+      aria-label="Featured product selectors"
+    >
+      {% for i in (0..3) %}
+        {% liquid
+          assign item_product = null
+          assign item_title = 'Holy Balm'
+          assign thumb_image_obj = null
+          assign fallback_thumb_asset = 'holy-balm-thumb-1.png'
+
+          if i == 0
+            assign fallback_thumb_asset = 'holy-balm-thumb-1.png'
+          elsif i == 1
+            assign fallback_thumb_asset = 'holy-balm-thumb-2.png'
+          elsif i == 2
+            assign fallback_thumb_asset = 'holy-balm-thumb-3.png'
+          elsif i == 3
+            assign fallback_thumb_asset = 'holy-balm-thumb-4.png'
+          endif
+
+          if has_custom_products
+            if selected_products[i] != blank
+              assign item_product = selected_products[i]
+            endif
+          else
+            assign handle = fallback_handles[i]
+            if all_products[handle] != blank
+              assign item_product = all_products[handle]
+            elsif collections.all.products[i] != blank
+              assign item_product = collections.all.products[i]
+            endif
+          endif
+
+          if item_product != blank
+            assign item_title = item_product.title
+            assign thumb_image_obj = item_product.featured_media | default: item_product.featured_image
+          endif
+
+          assign is_thumb_active = false
+          if forloop.first
+            assign is_thumb_active = true
+          endif
+        %}
+
+        <button
+          type="button"
+          class="hero-thumbnail {% if is_thumb_active %}is-active{% endif %}"
+          data-hero-thumb
+          data-thumb-index="{{ forloop.index0 }}"
+          role="tab"
+          aria-selected="{% if is_thumb_active %}true{% else %}false{% endif %}"
+          aria-label="Switch to product {{ forloop.index }}: {{ item_title | escape }}"
+        >
+          {% if thumb_image_obj != blank %}
+            {{
+              thumb_image_obj
+              | image_url: width: 180
+              | image_tag: class: 'hero-thumbnail__img', loading: 'eager', decoding: 'async', alt: item_title
+            }}
+          {% else %}
+            <img
+              src="{{ fallback_thumb_asset | asset_url }}"
+              alt="{{ item_title | escape }}"
+              class="hero-thumbnail__img"
+              width="84"
+              height="112"
+              loading="eager"
+              decoding="async"
+            >
+          {% endif %}
+        </button>
+      {% endfor %}
+    </div>
+
+    {% comment %} Floating Discount / Newsletter Card {% endcomment %}
+    {% if section.settings.show_newsletter %}
+      <div
+        class="hero-floating-modal"
+        data-hero-floating-modal
+        role="complementary"
+        aria-label="Special Offer"
+      >
+        <div class="hero-floating-modal__header">
+          <span class="hero-floating-modal__title p1">
+            {{ section.settings.newsletter_title | default: 'Join for 10% off your first order' }}
+          </span>
+          <button
+            type="button"
+            class="hero-floating-modal__close"
+            data-hero-modal-close
+            aria-label="Close special offer"
+          >
+            &times;
+          </button>
+        </div>
+
+        {% form 'customer', class: 'hero-floating-modal__form' %}
+          <input type="hidden" name="contact[tags]" value="newsletter,hero-10off">
+
+          <div class="hero-floating-modal__fields">
+            <input
+              type="email"
+              name="contact[email]"
+              placeholder="EMAIL*"
+              required
+              class="hero-floating-modal__input"
+              aria-label="Email address"
+            >
+            <input
+              type="tel"
+              name="contact[note][phone]"
+              placeholder="PHONE"
+              class="hero-floating-modal__input"
+              aria-label="Phone number"
+            >
+          </div>
+
+          <p class="hero-floating-modal__disclaimer">
+            By submitting, you agree to the Terms and Conditions and Privacy Policy.
+          </p>
+
+          <button
+            type="submit"
+            class="btn btn--primary btn--full hero-floating-modal__btn"
+          >
+            {{ section.settings.newsletter_button | default: 'Join Now' }}
+          </button>
+        {% endform %}
+      </div>
     {% endif %}
-  </hero-gallery>
+
+    {% comment %} Bottom Editorial Motto Ticker Band {% endcomment %}
+    <div class="hero-editorial-ticker" aria-label="Brand ceremony statement">
+      <div class="hero-editorial-ticker__content p1">
+        <span class="hero-editorial-ticker__item">
+          {{
+            section.settings.ticker_text
+            | default: 'halfholy is a beauty house built on ceremony. We make everyday relics — products that live on the skin as sensation and objects designed to be used, kept, and looked at. the act of caring for yourself as something sacred.'
+          }}
+        </span>
+        <span class="hero-editorial-ticker__item" aria-hidden="true">
+          {{
+            section.settings.ticker_text
+            | default: 'halfholy is a beauty house built on ceremony. We make everyday relics — products that live on the skin as sensation and objects designed to be used, kept, and looked at. the act of caring for yourself as something sacred.'
+          }}
+        </span>
+        <span class="hero-editorial-ticker__item" aria-hidden="true">
+          {{
+            section.settings.ticker_text
+            | default: 'halfholy is a beauty house built on ceremony. We make everyday relics — products that live on the skin as sensation and objects designed to be used, kept, and looked at. the act of caring for yourself as something sacred.'
+          }}
+        </span>
+      </div>
+    </div>
+  </hero-section>
 </section>
 
 {% schema %}
 {
   "name": "Editorial Hero",
   "tag": "section",
-  "class": "section-hero",
+  "class": "section-editorial-hero",
   "settings": [
     {
       "type": "product_list",
@@ -178,18 +327,44 @@
     {
       "type": "range",
       "id": "autoplay_speed",
-      "min": 3,
+      "min": 2,
       "max": 8,
       "step": 1,
       "unit": "s",
-      "label": "Slide Duration",
+      "label": "Auto-switch Duration",
       "default": 4
     },
     {
+      "type": "header",
+      "content": "Newsletter Modal"
+    },
+    {
       "type": "checkbox",
-      "id": "show_floating_banner",
-      "label": "Show Floating Product Banner",
+      "id": "show_newsletter",
+      "label": "Show Floating 10% Off Modal",
       "default": true
+    },
+    {
+      "type": "text",
+      "id": "newsletter_title",
+      "label": "Modal Title",
+      "default": "Join for 10% off your first order"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_button",
+      "label": "Button Label",
+      "default": "Join Now"
+    },
+    {
+      "type": "header",
+      "content": "Editorial Motto Ticker"
+    },
+    {
+      "type": "textarea",
+      "id": "ticker_text",
+      "label": "Bottom Ticker Statement",
+      "default": "halfholy is a beauty house built on ceremony. We make everyday relics — products that live on the skin as sensation and objects designed to be used, kept, and looked at. the act of caring for yourself as something sacred."
     }
   ],
   "presets": [

@@ -3,15 +3,13 @@
     "hero": {
       "type": "editorial-hero",
       "settings": {
-        "show_floating_banner": true,
-        "autoplay_speed": 4,
-        "product_list": [
-          "holy-balm",
-          "holy-balm-2",
-          "holy-balm-3",
-          "holy-balm-4"
-        ]
+        "show_newsletter": true,
+        "autoplay_speed": 4
       }
+    },
+    "dummy_white": {
+      "type": "dummy-white-section",
+      "settings": {}
     },
     "split_editorial": {
       "type": "editorial-split",
@@ -51,6 +49,7 @@
   },
   "order": [
     "hero",
+    "dummy_white",
     "split_editorial",
     "lookbook"
   ]

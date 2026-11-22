@@ -174,9 +174,9 @@
                                 {% if option.selected_value == value %}checked{% endif %}
                               >
                               {% if option_name_downcase == 'size' %}
-                                <span class="product-purchase__box t3">{{ value }}</span>
+                                <span class="btn btn--chip btn--box product-purchase__box">{{ value }}</span>
                               {% else %}
-                                <span class="product-purchase__pill t3">{{ value }}</span>
+                                <span class="btn btn--chip product-purchase__pill">{{ value }}</span>
                               {% endif %}
                             </label>
                           {% endfor %}
@@ -192,18 +192,18 @@
                     <div class="product-purchase__option-group">
                       <span class="product-purchase__option-label t2">Color</span>
                       <div class="product-purchase__option-values">
-                        <button type="button" class="product-purchase__pill t3" data-option-group="color" data-option-val="Burgundy">Burgundy</button>
-                        <button type="button" class="product-purchase__pill t3 is-selected" data-option-group="color" data-option-val="Purple">Purple</button>
-                        <button type="button" class="product-purchase__pill t3" data-option-group="color" data-option-val="Grey">Grey</button>
+                        <button type="button" class="btn btn--chip product-purchase__pill" data-option-group="color" data-option-val="Burgundy">Burgundy</button>
+                        <button type="button" class="btn btn--chip product-purchase__pill is-selected" data-option-group="color" data-option-val="Purple">Purple</button>
+                        <button type="button" class="btn btn--chip product-purchase__pill" data-option-group="color" data-option-val="Grey">Grey</button>
                       </div>
                     </div>
                     <div class="product-purchase__option-group">
                       <span class="product-purchase__option-label t2">Size</span>
                       <div class="product-purchase__option-values product-purchase__option-values--size">
-                        <button type="button" class="product-purchase__box t3" data-option-group="size" data-option-val="S">S</button>
-                        <button type="button" class="product-purchase__box t3 is-selected" data-option-group="size" data-option-val="M">M</button>
-                        <button type="button" class="product-purchase__box t3" data-option-group="size" data-option-val="L">L</button>
-                        <button type="button" class="product-purchase__box t3" data-option-group="size" data-option-val="XL">XL</button>
+                        <button type="button" class="btn btn--chip btn--box product-purchase__box" data-option-group="size" data-option-val="S">S</button>
+                        <button type="button" class="btn btn--chip btn--box product-purchase__box is-selected" data-option-group="size" data-option-val="M">M</button>
+                        <button type="button" class="btn btn--chip btn--box product-purchase__box" data-option-group="size" data-option-val="L">L</button>
+                        <button type="button" class="btn btn--chip btn--box product-purchase__box" data-option-group="size" data-option-val="XL">XL</button>
                       </div>
                     </div>
                   </div>
@@ -223,7 +223,7 @@
                       <button 
                         type="submit" 
                         name="add" 
-                        class="product-purchase__btn product-purchase__btn--one-time t3"
+                        class="btn btn--secondary btn--full product-purchase__btn product-purchase__btn--one-time"
                         data-purchase-type="one-time"
                       >
                         + One-Time Purchase
@@ -232,7 +232,7 @@
                       <button 
                         type="submit" 
                         name="add" 
-                        class="product-purchase__btn product-purchase__btn--subscribe t3"
+                        class="btn btn--primary btn--full product-purchase__btn product-purchase__btn--subscribe"
                         data-add-to-cart-btn
                         data-original-text="Subscribe and Save"
                         {% unless is_available %}disabled{% endunless %}

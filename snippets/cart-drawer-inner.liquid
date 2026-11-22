@@ -80,7 +80,7 @@
     <p class="cart-drawer__tax-note">Shipping & taxes calculated at checkout</p>
 
     <form action="{{ routes.cart_url }}" method="post" class="cart-drawer__form">
-      <button type="submit" name="checkout" class="cart-drawer__checkout-btn">
+      <button type="submit" name="checkout" class="btn btn--primary btn--full cart-drawer__checkout-btn">
         Proceed to Checkout
       </button>
     </form>
@@ -88,7 +88,7 @@
 {% else %}
   <div class="cart-drawer__empty">
     <p class="cart-drawer__empty-text">Your shopping bag is currently empty.</p>
-    <a href="{{ routes.all_products_collection_url }}" class="cart-drawer__empty-btn">
+    <a href="{{ routes.all_products_collection_url }}" class="btn btn--outline cart-drawer__empty-btn">
       Explore Shop
     </a>
   </div>
