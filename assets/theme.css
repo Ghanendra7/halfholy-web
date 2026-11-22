@@ -204,7 +204,10 @@ svg {
 .t2,
 .t2-fixed,
 .product-purchase__option-label,
-.product-card__title {
+.product-card__title,
+.cart-drawer__title,
+.cart-drawer__item-header,
+.cart-drawer__summary-label {
   font-family: var(--font-antique);
   font-size: 12px;
   font-weight: 300;
@@ -216,7 +219,10 @@ svg {
 
   .t2,
   .product-purchase__option-label,
-  .product-card__title {
+  .product-card__title,
+  .cart-drawer__title,
+  .cart-drawer__item-header,
+  .cart-drawer__summary-label {
     font-size: 10px;
   }
 }
@@ -1021,11 +1027,11 @@ cart-drawer.is-loading .cart-drawer__content {
 }
 
 .cart-drawer__item-title {
-  font-family: var(--font-antique);
-  font-size: 12px;
-  font-weight: 300;
-  line-height: 1.2;
-  letter-spacing: 0.01em;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
   color: var(--color-brand-dark);
   text-decoration: none;
   overflow: hidden;
@@ -1045,11 +1051,11 @@ cart-drawer.is-loading .cart-drawer__content {
 }
 
 .cart-drawer__item-price {
-  font-family: var(--font-antique);
-  font-size: 12px;
-  font-weight: 300;
-  line-height: 1.2;
-  letter-spacing: 0.01em;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
   color: var(--color-brand-dark);
   white-space: nowrap;
 }
@@ -1161,10 +1167,11 @@ cart-drawer.is-loading .cart-drawer__content {
 }
 
 .cart-drawer__summary-label {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 400;
-  letter-spacing: 0.15em;
+  font-family: var(--font-antique);
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
   text-transform: uppercase;
 }
 
