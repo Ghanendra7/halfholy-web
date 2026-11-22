@@ -5,11 +5,11 @@
         <li class="cart-drawer__item" data-line="{{ forloop.index }}">
           <a href="{{ item.url }}" class="cart-drawer__item-media" aria-label="{{ item.title | escape }}">
             {% if item.image %}
-              {{ item.image | image_url: width: 240 | image_tag: 
-                class: 'cart-drawer__item-image', 
-                loading: 'lazy', 
-                decoding: 'async',
-                alt: item.title | escape 
+              {{
+                item.image
+                | image_url: width: 240
+                | image_tag: class: 'cart-drawer__item-image', loading: 'lazy', decoding: 'async', alt: item.title
+                | escape
               }}
             {% else %}
               <div class="cart-drawer__item-placeholder"></div>
@@ -22,7 +22,15 @@
                 {{ item.product.title }}
               </a>
               <span class="cart-drawer__item-price">
-                {{ item.final_line_price | money_without_trailing_zeros | remove: '$' | remove: '£' | remove: '€' | strip }} <span class="cart-drawer__item-currency">{{ cart.currency.iso_code }}</span>
+                {{
+                  item.final_line_price
+                  | money_without_trailing_zeros
+                  | remove: '$'
+                  | remove: '£'
+                  | remove: '€'
+                  | strip
+                }}
+                <span class="cart-drawer__item-currency">{{ cart.currency.iso_code }}</span>
               </span>
             </div>
 
@@ -34,30 +42,34 @@
 
             <div class="cart-drawer__item-actions">
               <div class="cart-drawer__qty-control" role="group" aria-label="Quantity selector">
-                <button 
-                  type="button" 
-                  class="cart-drawer__qty-btn" 
-                  data-cart-qty-change="-1" 
-                  data-line="{{ forloop.index }}" 
-                  data-current-qty="{{ item.quantity }}" 
+                <button
+                  type="button"
+                  class="cart-drawer__qty-btn"
+                  data-cart-qty-change="-1"
+                  data-line="{{ forloop.index }}"
+                  data-current-qty="{{ item.quantity }}"
                   aria-label="Decrease quantity"
-                >−</button>
+                >
+                  −
+                </button>
                 <span class="cart-drawer__qty-value" aria-live="polite">{{ item.quantity }}</span>
-                <button 
-                  type="button" 
-                  class="cart-drawer__qty-btn" 
-                  data-cart-qty-change="1" 
-                  data-line="{{ forloop.index }}" 
-                  data-current-qty="{{ item.quantity }}" 
+                <button
+                  type="button"
+                  class="cart-drawer__qty-btn"
+                  data-cart-qty-change="1"
+                  data-line="{{ forloop.index }}"
+                  data-current-qty="{{ item.quantity }}"
                   aria-label="Increase quantity"
-                >+</button>
+                >
+                  +
+                </button>
               </div>
 
-              <button 
-                type="button" 
-                class="cart-drawer__item-remove" 
-                data-cart-remove 
-                data-line="{{ forloop.index }}" 
+              <button
+                type="button"
+                class="cart-drawer__item-remove"
+                data-cart-remove
+                data-line="{{ forloop.index }}"
                 aria-label="Remove {{ item.title | escape }}"
               >
                 Remove
@@ -73,7 +85,8 @@
     <div class="cart-drawer__summary-row">
       <span class="cart-drawer__summary-label">Subtotal</span>
       <span class="cart-drawer__summary-value" data-cart-subtotal>
-        {{ cart.total_price | money_without_trailing_zeros | remove: '$' | remove: '£' | remove: '€' | strip }} <span class="cart-drawer__summary-currency">{{ cart.currency.iso_code }}</span>
+        {{ cart.total_price | money_without_trailing_zeros | remove: '$' | remove: '£' | remove: '€' | strip }}
+        <span class="cart-drawer__summary-currency">{{ cart.currency.iso_code }}</span>
       </span>
     </div>
 
