@@ -140,14 +140,132 @@ class CartDrawer extends HTMLElement {
 customElements.define('cart-drawer', CartDrawer);
 
 /**
- * Product Form Custom Element (AJAX Add To Cart)
+ * Product Form Custom Element (AJAX Add To Cart with Selling Plan Modal Support)
  */
 class ProductForm extends HTMLElement {
   constructor() {
     super();
     this.form = this.querySelector('form');
+    this.sellingPlanInput = this.querySelector('[data-selling-plan-input]');
+    this.modal = this.querySelector('[data-subscription-modal]');
+    this.openModalBtn = this.querySelector('[data-open-sub-modal]');
+    this.confirmBtn = this.querySelector('[data-sub-modal-confirm]');
+
+    this.initModal();
+
     if (this.form) {
       this.form.addEventListener('submit', this.onSubmit.bind(this));
+    }
+  }
+
+  initModal() {
+    if (!this.modal) return;
+
+    if (this.openModalBtn) {
+      this.openModalBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.openModal();
+      });
+    }
+
+    const closeTriggers = this.modal.querySelectorAll('[data-sub-modal-close]');
+    closeTriggers.forEach(btn => {
+      btn.addEventListener('click', () => this.closeModal());
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !this.modal.classList.contains('hidden')) {
+        this.closeModal();
+      }
+    });
+
+    // Option cards selection
+    const planCards = this.modal.querySelectorAll('[data-plan-card]');
+    planCards.forEach(card => {
+      card.addEventListener('click', () => {
+        planCards.forEach(c => c.classList.remove('is-selected'));
+        card.classList.add('is-selected');
+
+        const radio = card.querySelector('input[type="radio"]');
+        if (radio) {
+          radio.checked = true;
+          if (this.sellingPlanInput && radio.value && !radio.value.startsWith('sample-')) {
+            this.sellingPlanInput.value = radio.value;
+          }
+        }
+      });
+    });
+
+    // Confirm button inside modal
+    if (this.confirmBtn) {
+      this.confirmBtn.addEventListener('click', this.onConfirmSubscription.bind(this));
+    }
+  }
+
+  openModal() {
+    if (!this.modal) return;
+    this.modal.classList.remove('hidden');
+    this.modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeModal() {
+    if (!this.modal) return;
+    this.modal.classList.add('hidden');
+    this.modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  async onConfirmSubscription(e) {
+    if (e) e.preventDefault();
+    if (!this.form) return;
+
+    const btn = this.confirmBtn;
+    const btnSpan = btn ? btn.querySelector('[data-sub-confirm-text]') : null;
+    const originalText = btnSpan ? btnSpan.textContent : (btn ? btn.textContent : 'Confirm Subscription');
+
+    if (btn) {
+      btn.disabled = true;
+      if (btnSpan) btnSpan.textContent = 'ADDING...';
+    }
+
+    try {
+      const formData = new FormData(this.form);
+      const activeRadio = this.modal.querySelector('input[name="modal_selling_plan"]:checked');
+      const planId = (activeRadio && activeRadio.value) || (this.sellingPlanInput ? this.sellingPlanInput.value : '');
+
+      if (planId && !planId.startsWith('sample-')) {
+        formData.set('selling_plan', planId);
+      } else {
+        formData.delete('selling_plan');
+      }
+
+      const url = window.routes.cart_add_url.endsWith('.js') ? window.routes.cart_add_url : `${window.routes.cart_add_url}.js`;
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: formData
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        this.closeModal();
+        const cartDrawer = document.querySelector('cart-drawer');
+        if (cartDrawer) {
+          await cartDrawer.updateCart();
+          cartDrawer.open();
+        }
+      } else {
+        alert(data.description || 'Could not add subscription to cart.');
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        if (btnSpan) btnSpan.textContent = originalText;
+      }
     }
   }
 
@@ -162,6 +280,9 @@ class ProductForm extends HTMLElement {
 
     try {
       const formData = new FormData(this.form);
+      // One-time purchase - omit selling plan
+      formData.delete('selling_plan');
+
       const url = window.routes.cart_add_url.endsWith('.js') ? window.routes.cart_add_url : `${window.routes.cart_add_url}.js`;
       const res = await fetch(url, {
         method: 'POST',
@@ -233,17 +354,36 @@ class VariantSelector extends HTMLElement {
       }
     }
 
-    // Update Add to Cart button state
+    // Update Add to Cart / Subscribe button states
     const submitBtn = document.querySelector('[data-add-to-cart-btn]');
+    const oneTimeBtn = document.querySelector('.product-purchase__btn--one-time');
+
     if (submitBtn) {
-      if (currentVariant.available) {
-        submitBtn.disabled = false;
-        submitBtn.textContent = submitBtn.dataset.originalText || 'Subscribe and Save';
+      submitBtn.disabled = !currentVariant.available;
+      const subSpan = submitBtn.querySelector('span');
+      if (subSpan) {
+        subSpan.textContent = currentVariant.available ? (submitBtn.dataset.originalText || 'Subscribe and Save') : 'SOLD OUT';
       } else {
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'SOLD OUT';
+        submitBtn.textContent = currentVariant.available ? (submitBtn.dataset.originalText || 'Subscribe and Save') : 'SOLD OUT';
       }
     }
+
+    if (oneTimeBtn) {
+      oneTimeBtn.disabled = !currentVariant.available;
+      oneTimeBtn.textContent = currentVariant.available ? '+ Add to Cart' : 'SOLD OUT';
+    }
+
+    // Update Modal prices
+    const modalCards = document.querySelectorAll('[data-plan-card]');
+    modalCards.forEach(card => {
+      const radio = card.querySelector('.subscription-modal__radio');
+      const priceEl = card.querySelector('[data-card-price]');
+      if (radio && priceEl) {
+        const discount = parseFloat(radio.dataset.discount) || 0;
+        const discountedCents = Math.round(currentVariant.price * (100 - discount) / 100);
+        priceEl.textContent = (discountedCents / 100).toFixed(2);
+      }
+    });
   }
 }
 customElements.define('variant-selector', VariantSelector);

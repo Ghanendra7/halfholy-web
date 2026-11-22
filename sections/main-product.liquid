@@ -1,27 +1,54 @@
 {% assign current_variant = product.selected_or_first_available_variant %}
-{% assign featured_media = current_variant.featured_media | default: product.featured_media | default: product.media[0] %}
+{% assign featured_media = current_variant.featured_media
+  | default: product.featured_media
+  | default: product.media[0]
+%}
 {% assign has_real_media = false %}
 {% if product.media.size > 0 %}
   {% assign has_real_media = true %}
 {% endif %}
 
 {% if product %}
-  {% assign raw_price = current_variant.price | money_without_trailing_zeros | remove: '$' | remove: '£' | remove: '€' | strip %}
+  {% assign raw_price = current_variant.price
+    | money_without_trailing_zeros
+    | remove: '$'
+    | remove: '£'
+    | remove: '€'
+    | strip
+  %}
   {% assign currency_code = cart.currency.iso_code | default: 'USD' %}
 {% else %}
   {% assign raw_price = '50.00' %}
   {% assign currency_code = 'USD' %}
 {% endif %}
 
+{% assign has_selling_plans = false %}
+{% assign default_selling_plan = null %}
+{% assign max_savings = 0 %}
+{% if product.selling_plan_groups.size > 0 %}
+  {% assign has_selling_plans = true %}
+  {% assign default_selling_plan_group = product.selling_plan_groups[0] %}
+  {% assign default_selling_plan = default_selling_plan_group.selling_plans[0] %}
+  {% for plan in default_selling_plan_group.selling_plans %}
+    {% for adj in plan.price_adjustments %}
+      {% if adj.value_type == 'percentage' and adj.value > max_savings %}
+        {% assign max_savings = adj.value %}
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
+{% elsif product == blank %}
+  {% assign has_selling_plans = true %}
+  {% assign max_savings = 6 %}
+{% endif %}
+
 <section class="product-purchase" data-product-purchase-section>
   <product-gallery class="product-purchase__container">
-    
     <div class="product-purchase__media-column">
       <div class="product-purchase__thumbnails" role="tablist" aria-label="Product media gallery">
         {% if has_real_media %}
           {% for media in product.media %}
-            <button 
-              type="button" 
+            <button
+              type="button"
               class="product-purchase__thumb {% if forloop.first %}is-active{% endif %}"
               data-thumb-index="{{ forloop.index0 }}"
               data-full-src="{{ media | image_url: width: 1400 }}"
@@ -33,8 +60,8 @@
             </button>
           {% endfor %}
         {% else %}
-          <button 
-            type="button" 
+          <button
+            type="button"
             class="product-purchase__thumb"
             data-thumb-index="0"
             data-full-src="{{ 'holy-balm-thumb-1.png' | asset_url }}"
@@ -42,10 +69,17 @@
             aria-selected="false"
             aria-label="View product image 1"
           >
-            <img src="{{ 'holy-balm-thumb-1.png' | asset_url }}" alt="Holy Balm view 1" width="85" height="114" loading="lazy" decoding="async">
+            <img
+              src="{{ 'holy-balm-thumb-1.png' | asset_url }}"
+              alt="Holy Balm view 1"
+              width="85"
+              height="114"
+              loading="lazy"
+              decoding="async"
+            >
           </button>
-          <button 
-            type="button" 
+          <button
+            type="button"
             class="product-purchase__thumb is-active"
             data-thumb-index="1"
             data-full-src="{{ 'holy-balm-main.png' | asset_url }}"
@@ -53,10 +87,17 @@
             aria-selected="true"
             aria-label="View product image 2"
           >
-            <img src="{{ 'holy-balm-thumb-2.png' | asset_url }}" alt="Holy Balm view 2" width="85" height="114" loading="eager" decoding="async">
+            <img
+              src="{{ 'holy-balm-thumb-2.png' | asset_url }}"
+              alt="Holy Balm view 2"
+              width="85"
+              height="114"
+              loading="eager"
+              decoding="async"
+            >
           </button>
-          <button 
-            type="button" 
+          <button
+            type="button"
             class="product-purchase__thumb"
             data-thumb-index="2"
             data-full-src="{{ 'holy-balm-thumb-3.png' | asset_url }}"
@@ -64,10 +105,17 @@
             aria-selected="false"
             aria-label="View product image 3"
           >
-            <img src="{{ 'holy-balm-thumb-3.png' | asset_url }}" alt="Holy Balm view 3" width="85" height="114" loading="lazy" decoding="async">
+            <img
+              src="{{ 'holy-balm-thumb-3.png' | asset_url }}"
+              alt="Holy Balm view 3"
+              width="85"
+              height="114"
+              loading="lazy"
+              decoding="async"
+            >
           </button>
-          <button 
-            type="button" 
+          <button
+            type="button"
             class="product-purchase__thumb"
             data-thumb-index="3"
             data-full-src="{{ 'holy-balm-thumb-4.png' | asset_url }}"
@@ -75,25 +123,35 @@
             aria-selected="false"
             aria-label="View product image 4"
           >
-            <img src="{{ 'holy-balm-thumb-4.png' | asset_url }}" alt="Holy Balm view 4" width="85" height="114" loading="lazy" decoding="async">
+            <img
+              src="{{ 'holy-balm-thumb-4.png' | asset_url }}"
+              alt="Holy Balm view 4"
+              width="85"
+              height="114"
+              loading="lazy"
+              decoding="async"
+            >
           </button>
         {% endif %}
       </div>
 
       <div class="product-purchase__featured-media" data-featured-media>
         {% if has_real_media %}
-          {{ featured_media | image_url: width: 1500 | image_tag:
-            class: 'product-purchase__featured-image',
-            data-main-image: '',
-            loading: 'eager',
-            fetchpriority: 'high',
-            decoding: 'async',
-            alt: product.title
+          {{
+            featured_media
+            | image_url: width: 1500
+            | image_tag:
+              class: 'product-purchase__featured-image',
+              data-main-image: '',
+              loading: 'eager',
+              fetchpriority: 'high',
+              decoding: 'async',
+              alt: product.title
           }}
         {% else %}
-          <img 
-            src="{{ 'holy-balm-main.png' | asset_url }}" 
-            alt="{{ product.title | default: 'Holy Balm' }}" 
+          <img
+            src="{{ 'holy-balm-main.png' | asset_url }}"
+            alt="{{ product.title | default: 'Holy Balm' }}"
             class="product-purchase__featured-image"
             data-main-image
             loading="eager"
@@ -136,12 +194,20 @@
                 {% if product.description != blank %}
                   {{ product.description }}
                 {% else %}
-                  <p>A conditioning lip balm with [peppermint], housed in a [machined aluminum] case designed to be carried and kept. It goes on clear, leaves a soft finish, and gives a cool tingle on contact. Keep it in a pocket, a bag, or on the nightstand.</p>
+                  <p>
+                    A conditioning lip balm with [peppermint], housed in a [machined aluminum] case designed to be
+                    carried and kept. It goes on clear, leaves a soft finish, and gives a cool tingle on contact. Keep
+                    it in a pocket, a bag, or on the nightstand.
+                  </p>
                 {% endif %}
               </div>
 
             {% when 'ingredients' %}
-              {% assign ingredients_data = product.metafields.custom.ingredients.value | default: product.metafields.custom.ingredients | default: product.metafields.custom.specifications.value | default: product.metafields.custom.specifications %}
+              {% assign ingredients_data = product.metafields.custom.ingredients.value
+                | default: product.metafields.custom.ingredients
+                | default: product.metafields.custom.specifications.value
+                | default: product.metafields.custom.specifications
+              %}
               <div class="product-purchase__ingredients t6" {{ block.shopify_attributes }}>
                 {% if ingredients_data != blank %}
                   {{ ingredients_data | newline_to_br }}
@@ -166,12 +232,14 @@
                         <div class="product-purchase__option-values {% if option_name_downcase == 'size' %}product-purchase__option-values--size{% endif %}">
                           {% for value in option.values %}
                             <label class="product-purchase__option-item">
-                              <input 
-                                type="radio" 
-                                name="{{ option.name }}" 
-                                value="{{ value | escape }}" 
+                              <input
+                                type="radio"
+                                name="{{ option.name }}"
+                                value="{{ value | escape }}"
                                 class="product-purchase__option-input"
-                                {% if option.selected_value == value %}checked{% endif %}
+                                {% if option.selected_value == value %}
+                                  checked
+                                {% endif %}
                               >
                               {% if option_name_downcase == 'size' %}
                                 <span class="btn btn--chip btn--box product-purchase__box">{{ value }}</span>
@@ -192,18 +260,67 @@
                     <div class="product-purchase__option-group">
                       <span class="product-purchase__option-label t2">Color</span>
                       <div class="product-purchase__option-values">
-                        <button type="button" class="btn btn--chip product-purchase__pill" data-option-group="color" data-option-val="Burgundy">Burgundy</button>
-                        <button type="button" class="btn btn--chip product-purchase__pill is-selected" data-option-group="color" data-option-val="Purple">Purple</button>
-                        <button type="button" class="btn btn--chip product-purchase__pill" data-option-group="color" data-option-val="Grey">Grey</button>
+                        <button
+                          type="button"
+                          class="btn btn--chip product-purchase__pill"
+                          data-option-group="color"
+                          data-option-val="Burgundy"
+                        >
+                          Burgundy
+                        </button>
+                        <button
+                          type="button"
+                          class="btn btn--chip product-purchase__pill is-selected"
+                          data-option-group="color"
+                          data-option-val="Purple"
+                        >
+                          Purple
+                        </button>
+                        <button
+                          type="button"
+                          class="btn btn--chip product-purchase__pill"
+                          data-option-group="color"
+                          data-option-val="Grey"
+                        >
+                          Grey
+                        </button>
                       </div>
                     </div>
                     <div class="product-purchase__option-group">
                       <span class="product-purchase__option-label t2">Size</span>
                       <div class="product-purchase__option-values product-purchase__option-values--size">
-                        <button type="button" class="btn btn--chip btn--box product-purchase__box" data-option-group="size" data-option-val="S">S</button>
-                        <button type="button" class="btn btn--chip btn--box product-purchase__box is-selected" data-option-group="size" data-option-val="M">M</button>
-                        <button type="button" class="btn btn--chip btn--box product-purchase__box" data-option-group="size" data-option-val="L">L</button>
-                        <button type="button" class="btn btn--chip btn--box product-purchase__box" data-option-group="size" data-option-val="XL">XL</button>
+                        <button
+                          type="button"
+                          class="btn btn--chip btn--box product-purchase__box"
+                          data-option-group="size"
+                          data-option-val="S"
+                        >
+                          S
+                        </button>
+                        <button
+                          type="button"
+                          class="btn btn--chip btn--box product-purchase__box is-selected"
+                          data-option-group="size"
+                          data-option-val="M"
+                        >
+                          M
+                        </button>
+                        <button
+                          type="button"
+                          class="btn btn--chip btn--box product-purchase__box"
+                          data-option-group="size"
+                          data-option-val="L"
+                        >
+                          L
+                        </button>
+                        <button
+                          type="button"
+                          class="btn btn--chip btn--box product-purchase__box"
+                          data-option-group="size"
+                          data-option-val="XL"
+                        >
+                          XL
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -214,41 +331,261 @@
               <div class="product-purchase__buy-buttons" {{ block.shopify_attributes }}>
                 <product-form class="product-purchase__form-wrap">
                   {% form 'product', product, id: 'product-form-installment', class: 'product-purchase__form' %}
-                    <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id | default: 1 }}">
+                    <input
+                      type="hidden"
+                      name="id"
+                      value="{{ product.selected_or_first_available_variant.id | default: 1 }}"
+                    >
+                    <input
+                      type="hidden"
+                      name="selling_plan"
+                      value="{% if has_selling_plans and default_selling_plan %}{{ default_selling_plan.id }}{% endif %}"
+                      data-selling-plan-input
+                    >
+
                     {% assign is_available = product.selected_or_first_available_variant.available %}
-                    {% if is_available == nil %}
+                    {% if is_available == null %}
                       {% assign is_available = true %}
                     {% endif %}
-                    <div class="product-purchase__actions">
-                      <button 
-                        type="submit" 
-                        name="add" 
-                        class="btn btn--secondary btn--full product-purchase__btn product-purchase__btn--one-time"
-                        data-purchase-type="one-time"
-                      >
-                        + One-Time Purchase
-                      </button>
 
-                      <button 
-                        type="submit" 
-                        name="add" 
-                        class="btn btn--primary btn--full product-purchase__btn product-purchase__btn--subscribe"
-                        data-add-to-cart-btn
-                        data-original-text="Subscribe and Save"
-                        {% unless is_available %}disabled{% endunless %}
-                      >
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="product-purchase__btn-icon" aria-hidden="true" focusable="false">
-                          <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
-                        </svg>
-                        <span>
-                          {% if is_available %}
-                            Subscribe and Save
-                          {% else %}
-                            SOLD OUT
-                          {% endif %}
-                        </span>
-                      </button>
+                    <div class="product-purchase__actions">
+                      {% unless product.requires_selling_plan %}
+                        <button
+                          type="submit"
+                          name="add"
+                          class="btn btn--secondary btn--full product-purchase__btn product-purchase__btn--one-time"
+                          data-purchase-type="one-time"
+                          {% unless is_available %}
+                            disabled
+                          {% endunless %}
+                        >
+                          + Add to Cart
+                        </button>
+                      {% endunless %}
+
+                      {% if has_selling_plans %}
+                        <button
+                          type="button"
+                          class="btn btn--primary btn--full product-purchase__btn product-purchase__btn--subscribe"
+                          data-open-sub-modal
+                          data-purchase-type="subscription"
+                          data-original-text="Subscribe and Save"
+                          {% unless is_available %}
+                            disabled
+                          {% endunless %}
+                        >
+                          <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="product-purchase__btn-icon"
+                            aria-hidden="true"
+                            focusable="false"
+                          >
+                            <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+                          </svg>
+                          <span>
+                            {% if is_available %}
+                              Subscribe and Save
+                            {% else %}
+                              SOLD OUT
+                            {% endif %}
+                          </span>
+                        </button>
+                      {% elsif product.requires_selling_plan %}
+                        <button
+                          type="button"
+                          class="btn btn--primary btn--full product-purchase__btn product-purchase__btn--subscribe"
+                          data-open-sub-modal
+                          data-purchase-type="subscription"
+                          data-original-text="Subscribe"
+                          {% unless is_available %}
+                            disabled
+                          {% endunless %}
+                        >
+                          <span>
+                            {% if is_available %}
+                              Subscribe
+                            {% else %}
+                              SOLD OUT
+                            {% endif %}
+                          </span>
+                        </button>
+                      {% endif %}
                     </div>
+
+                    {% if has_selling_plans %}
+                      <div
+                        class="subscription-modal hidden"
+                        data-subscription-modal
+                        aria-hidden="true"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="sub-modal-title"
+                      >
+                        <div class="subscription-modal__backdrop" data-sub-modal-close></div>
+                        <div class="subscription-modal__container">
+                          <div class="subscription-modal__header">
+                            <h2 id="sub-modal-title" class="subscription-modal__title t2">Select Frequency</h2>
+                            <button
+                              type="button"
+                              class="btn-close subscription-modal__close"
+                              data-sub-modal-close
+                              aria-label="Close modal"
+                            >
+                              {% render 'icon-close' %}
+                            </button>
+                          </div>
+
+                          <div
+                            class="subscription-modal__options"
+                            role="radiogroup"
+                            aria-label="Subscription frequency options"
+                          >
+                            {% if product.selling_plan_groups.size > 0 %}
+                              {% for plan in default_selling_plan_group.selling_plans %}
+                                {% assign plan_discount = 0 %}
+                                {% if plan.price_adjustments.size > 0 %}
+                                  {% assign plan_discount = plan.price_adjustments[0].value %}
+                                {% endif %}
+                                {% assign discount_factor = 100 | minus: plan_discount %}
+                                {% assign sub_cents = current_variant.price
+                                  | times: discount_factor
+                                  | divided_by: 100
+                                %}
+                                {% assign plan_sub_price = sub_cents
+                                  | money_without_trailing_zeros
+                                  | remove: '$'
+                                  | remove: '£'
+                                  | remove: '€'
+                                  | strip
+                                %}
+
+                                <label
+                                  class="subscription-modal__option {% if forloop.first %}is-selected{% endif %}"
+                                  data-plan-card
+                                >
+                                  <input
+                                    type="radio"
+                                    name="modal_selling_plan"
+                                    value="{{ plan.id }}"
+                                    class="subscription-modal__radio"
+                                    data-discount="{{ plan_discount }}"
+                                    data-price="{{ plan_sub_price }}"
+                                    {% if forloop.first %}
+                                      checked
+                                    {% endif %}
+                                  >
+                                  <span class="subscription-modal__radio-custom"></span>
+                                  <span class="subscription-modal__name t2">
+                                    {{- plan.options[0].value | default: plan.name -}}
+                                  </span>
+                                  <span class="subscription-modal__price">
+                                    <span class="subscription-modal__amount t2"
+                                      ><span data-card-price>{{ plan_sub_price }}</span
+                                      ><span class="subscription-modal__currency t4">{{ currency_code }}</span></span
+                                    >
+                                    {% if plan_discount > 0 %}
+                                      <span class="subscription-modal__discount"><span>SAVE</span><span>{{ plan_discount }}%</span></span>
+                                    {% endif %}
+                                  </span>
+                                </label>
+                              {% endfor %}
+                            {% else %}
+                              <label class="subscription-modal__option is-selected" data-plan-card>
+                                <input
+                                  type="radio"
+                                  name="modal_selling_plan"
+                                  value="sample-1"
+                                  class="subscription-modal__radio"
+                                  data-discount="6"
+                                  data-price="47.00"
+                                  checked
+                                >
+                                <span class="subscription-modal__radio-custom"></span>
+                                <span class="subscription-modal__name t2">1 Month</span>
+                                <span class="subscription-modal__price">
+                                  <span class="subscription-modal__amount t2"
+                                    ><span data-card-price>47.00</span
+                                    ><span class="subscription-modal__currency t4">{{ currency_code }}</span></span
+                                  >
+                                  <span class="subscription-modal__discount"><span>SAVE</span><span>6%</span></span>
+                                </span>
+                              </label>
+                              <label class="subscription-modal__option" data-plan-card>
+                                <input
+                                  type="radio"
+                                  name="modal_selling_plan"
+                                  value="sample-2"
+                                  class="subscription-modal__radio"
+                                  data-discount="4"
+                                  data-price="48.00"
+                                >
+                                <span class="subscription-modal__radio-custom"></span>
+                                <span class="subscription-modal__name t2">2 Months</span>
+                                <span class="subscription-modal__price">
+                                  <span class="subscription-modal__amount t2"
+                                    ><span data-card-price>48.00</span
+                                    ><span class="subscription-modal__currency t4">{{ currency_code }}</span></span
+                                  >
+                                  <span class="subscription-modal__discount"><span>SAVE</span><span>4%</span></span>
+                                </span>
+                              </label>
+                              <label class="subscription-modal__option" data-plan-card>
+                                <input
+                                  type="radio"
+                                  name="modal_selling_plan"
+                                  value="sample-3"
+                                  class="subscription-modal__radio"
+                                  data-discount="4"
+                                  data-price="48.00"
+                                >
+                                <span class="subscription-modal__radio-custom"></span>
+                                <span class="subscription-modal__name t2">3 Months</span>
+                                <span class="subscription-modal__price">
+                                  <span class="subscription-modal__amount t2"
+                                    ><span data-card-price>48.00</span
+                                    ><span class="subscription-modal__currency t4">{{ currency_code }}</span></span
+                                  >
+                                  <span class="subscription-modal__discount"><span>SAVE</span><span>4%</span></span>
+                                </span>
+                              </label>
+                            {% endif %}
+                          </div>
+
+                          <div class="subscription-modal__footer">
+                            <button
+                              type="button"
+                              class="btn btn--primary btn--full product-purchase__btn product-purchase__btn--subscribe"
+                              data-sub-modal-confirm
+                              data-original-text="Subscribe and Save"
+                            >
+                              <svg
+                                width="10"
+                                height="10"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="product-purchase__btn-icon"
+                                aria-hidden="true"
+                                focusable="false"
+                              >
+                                <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+                              </svg>
+                              <span data-sub-confirm-text>Subscribe and Save</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    {% endif %}
                   {% endform %}
                 </product-form>
               </div>
@@ -256,7 +593,6 @@
         {% endfor %}
       </div>
     </div>
-
   </product-gallery>
 </section>
 
