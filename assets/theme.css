@@ -981,11 +981,6 @@ cart-drawer.is-loading .cart-drawer__content {
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  transition: opacity 0.15s ease;
-}
-
-.cart-drawer__item-media:hover {
-  opacity: 0.8;
 }
 
 .cart-drawer__item-image {
@@ -1030,11 +1025,6 @@ cart-drawer.is-loading .cart-drawer__content {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  transition: opacity 0.15s ease;
-}
-
-.cart-drawer__item-title:hover {
-  opacity: 0.6;
 }
 
 .cart-drawer__item-price {
@@ -1265,11 +1255,6 @@ cart-drawer.is-loading .cart-drawer__content {
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  transition: opacity 0.15s ease;
-}
-
-.cart-page__item-media:hover {
-  opacity: 0.8;
 }
 
 .cart-page__item-image {
