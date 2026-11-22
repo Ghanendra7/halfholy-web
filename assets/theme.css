@@ -220,7 +220,6 @@ svg {
   .t2,
   .product-purchase__option-label,
   .product-card__title,
-  .cart-drawer__title,
   .cart-drawer__item-header,
   .cart-drawer__summary-label {
     font-size: 10px;
@@ -1468,10 +1467,6 @@ cart-drawer.is-loading .cart-drawer__content {
 
   .cart-drawer__panel {
     border-left: none;
-  }
-
-  .cart-drawer__title {
-    font-size: 10px;
   }
 
   .cart-drawer__item-title,
