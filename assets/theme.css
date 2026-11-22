@@ -205,6 +205,7 @@ svg {
 .t2-fixed,
 .product-purchase__option-label,
 .product-card__title,
+.site-header__cart-btn,
 .cart-drawer__title,
 .cart-drawer__item-header,
 .cart-drawer__summary-label {
@@ -900,7 +901,6 @@ cart-drawer.active .cart-drawer__panel {
   font-weight: 300;
   line-height: 1.15;
   letter-spacing: 0.01em;
-  text-transform: uppercase;
   color: var(--color-brand-dark);
 }
 
@@ -908,16 +908,12 @@ cart-drawer.active .cart-drawer__panel {
   font-family: var(--font-mono);
   font-size: 10px;
   font-weight: 400;
-  letter-spacing: 0.05em;
-  margin-left: 2px;
 }
 
 .cart-drawer__close {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
   color: var(--color-brand-dark);
   cursor: pointer;
   background: none;
@@ -1171,7 +1167,6 @@ cart-drawer.is-loading .cart-drawer__content {
   font-weight: 300;
   line-height: 1.15;
   letter-spacing: 0.01em;
-  text-transform: uppercase;
 }
 
 .cart-drawer__summary-value {
