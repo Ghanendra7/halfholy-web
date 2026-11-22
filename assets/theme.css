@@ -981,6 +981,14 @@ cart-drawer.is-loading .cart-drawer__content {
   align-items: center;
   justify-content: center;
   text-decoration: none;
+  opacity: 1 !important;
+  transition: none !important;
+}
+
+.cart-drawer__item-media:hover,
+.cart-drawer__item-media:focus,
+.cart-drawer__item-media:active {
+  opacity: 1 !important;
 }
 
 .cart-drawer__item-image {
@@ -1025,6 +1033,15 @@ cart-drawer.is-loading .cart-drawer__content {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  opacity: 1 !important;
+  transition: none !important;
+}
+
+.cart-drawer__item-title:hover,
+.cart-drawer__item-title:focus,
+.cart-drawer__item-title:active {
+  opacity: 1 !important;
+  color: var(--color-brand-dark) !important;
 }
 
 .cart-drawer__item-price {
