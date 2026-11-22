@@ -1,0 +1,19 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-legal",
+      "settings": {
+        "show_page_title": true,
+        "show_page_content": true,
+        "max_width": 420,
+        "padding_top": 64,
+        "padding_bottom": 96,
+        "padding_top_mobile": 48,
+        "padding_bottom_mobile": 64
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

@@ -1,14 +1,39 @@
-<section class="w-full px-6 py-28 text-center bg-[#E6E9EA]">
-  <p class="text-xs font-mono uppercase tracking-widest text-[#666666] mb-2">404 NOT FOUND</p>
-  <h1 class="text-3xl font-serif tracking-widest uppercase mb-8">Page Not Found</h1>
-  <a href="{{ routes.root_url }}" class="inline-block hairline-all px-8 py-3 text-xs font-mono uppercase tracking-widest hover:bg-black hover:text-white transition-colors">
-    Return to Sanctuary
-  </a>
+<section class="section-404" data-section-id="{{ section.id }}">
+  <div class="section-404__container">
+    <h1 class="section-404__title p1">
+      {{ section.settings.title | default: 'PAGE NOT FOUND' }}
+    </h1>
+    {%- if section.settings.link_text != blank -%}
+      <a href="{{ section.settings.link_url | default: routes.root_url }}" class="section-404__link p1">
+        {{ section.settings.link_text }}
+      </a>
+    {%- endif -%}
+  </div>
 </section>
 
 {% schema %}
 {
   "name": "404 Page",
-  "settings": []
+  "tag": "section",
+  "class": "section-404-wrapper",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "PAGE NOT FOUND"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Link Label",
+      "default": "RETURN HOME"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link Destination"
+    }
+  ]
 }
 {% endschema %}

@@ -1,0 +1,182 @@
+{%- style -%}
+  .legal-page-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top_mobile | default: 48 }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile | default: 64 }}px;
+  }
+  @media screen and (min-width: 768px) {
+    .legal-page-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top | default: 64 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | default: 96 }}px;
+    }
+  }
+  {%- if section.settings.max_width != blank -%}
+    .legal-page-{{ section.id }} .legal-page__container {
+      max-width: {{ section.settings.max_width }}px;
+    }
+  {%- endif -%}
+{%- endstyle -%}
+
+<section class="legal-page legal-page-{{ section.id }}" data-section-id="{{ section.id }}">
+  <div class="legal-page__container">
+
+    {%- if section.settings.show_page_title and page.title != blank -%}
+      <div class="legal-page__section">
+        <h1 class="legal-page__title p1">{{ page.title }}</h1>
+        {%- if page.content != blank and section.settings.show_page_content -%}
+          <div class="legal-page__content p1">
+            {{ page.content }}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- elsif page.content != blank and section.settings.show_page_content -%}
+      <div class="legal-page__section">
+        <div class="legal-page__content p1">
+          {{ page.content }}
+        </div>
+      </div>
+    {%- endif -%}
+
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when 'policy_section' -%}
+          <div class="legal-page__section" {{ block.shopify_attributes }}>
+            {%- if block.settings.title != blank -%}
+              <h2 class="legal-page__title p1">{{ block.settings.title }}</h2>
+            {%- endif -%}
+            {%- if block.settings.content != blank -%}
+              <div class="legal-page__content p1">
+                {{ block.settings.content }}
+              </div>
+            {%- endif -%}
+          </div>
+      {%- endcase -%}
+    {%- endfor -%}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Legal Page",
+  "tag": "section",
+  "class": "section-legal-page",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_page_title",
+      "label": "Show Page Title",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_page_content",
+      "label": "Show Page Content",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 360,
+      "max": 600,
+      "step": 20,
+      "unit": "px",
+      "label": "Content Max Width",
+      "default": 420
+    },
+    {
+      "type": "header",
+      "content": "Desktop Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 24,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top Padding",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 24,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom Padding",
+      "default": 96
+    },
+    {
+      "type": "header",
+      "content": "Mobile Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 16,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile Top Padding",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 16,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile Bottom Padding",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "policy_section",
+      "name": "Policy Section",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Section Title",
+          "default": "TERMS & CONDITIONS"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Section Content",
+          "default": "<p>Last updated: [Month Day, 2026]<br>Halfholy LLC (\"Halfholy,\" \"we,\" \"us\") operates halfholy.nyc. This policy explains what information we collect and how we use it.</p><p>Information we collect. When you place an order or sign up for emails, we collect your name, email address, shipping and billing address, and phone number. Payment details are handled by our payment processor and never stored by us. We also collect basic browsing data through cookies, such as pages viewed and device type.</p><p>How we use it. We use your information to process and ship orders, respond to questions, send emails you have opted into, and improve the site.</p><p>Sharing. We share information only with service providers that help run the business, such as our e-commerce platform, payment processor, shipping carriers, and email provider. We do not sell your personal information.</p><p>Your choices. You can unsubscribe from marketing emails at any time using the link in any email. To access, correct, or delete your information, email info@halfholy.nyc.</p><p>Children. This site is not directed at children under 13, and we do not knowingly collect their information.</p><p>Changes. We may update this policy. The date at the top shows the latest version.</p><p>Contact: info@halfholy.nyc</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Legal Page",
+      "settings": {
+        "show_page_title": false,
+        "show_page_content": false,
+        "max_width": 420
+      },
+      "blocks": [
+        {
+          "type": "policy_section",
+          "settings": {
+            "title": "TERMS & CONDITIONS",
+            "content": "<p>Last updated: [Month Day, 2026]<br>Halfholy LLC (\"Halfholy,\" \"we,\" \"us\") operates halfholy.nyc. This policy explains what information we collect and how we use it.</p><p>Information we collect. When you place an order or sign up for emails, we collect your name, email address, shipping and billing address, and phone number. Payment details are handled by our payment processor and never stored by us. We also collect basic browsing data through cookies, such as pages viewed and device type.</p><p>How we use it. We use your information to process and ship orders, respond to questions, send emails you have opted into, and improve the site.</p><p>Sharing. We share information only with service providers that help run the business, such as our e-commerce platform, payment processor, shipping carriers, and email provider. We do not sell your personal information.</p><p>Your choices. You can unsubscribe from marketing emails at any time using the link in any email. To access, correct, or delete your information, email info@halfholy.nyc.</p><p>Children. This site is not directed at children under 13, and we do not knowingly collect their information.</p><p>Changes. We may update this policy. The date at the top shows the latest version.</p><p>Contact: info@halfholy.nyc</p>"
+          }
+        },
+        {
+          "type": "policy_section",
+          "settings": {
+            "title": "RETURNS AND EXCHANGES",
+            "content": "<p>Last updated: [Month Day, 2026]<br>Halfholy LLC (\"Halfholy,\" \"we,\" \"us\") operates halfholy.nyc. This policy explains what information we collect and how we use it.</p><p>Information we collect. When you place an order or sign up for emails, we collect your name, email address, shipping and billing address, and phone number. Payment details are handled by our payment processor and never stored by us. We also collect basic browsing data through cookies, such as pages viewed and device type.</p><p>How we use it. We use your information to process and ship orders, respond to questions, send emails you have opted into, and improve the site.</p><p>Sharing. We share information only with service providers that help run the business, such as our e-commerce platform, payment processor, shipping carriers, and email provider. We do not sell your personal information.</p><p>Your choices. You can unsubscribe from marketing emails at any time using the link in any email. To access, correct, or delete your information, email info@halfholy.nyc.</p><p>Children. This site is not directed at children under 13, and we do not knowingly collect their information.</p><p>Changes. We may update this policy. The date at the top shows the latest version.</p><p>Contact: info@halfholy.nyc</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
