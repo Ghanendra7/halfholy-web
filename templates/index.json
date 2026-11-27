@@ -10,47 +10,10 @@
     "dummy_white": {
       "type": "dummy-white-section",
       "settings": {}
-    },
-    "split_editorial": {
-      "type": "editorial-split",
-      "settings": {
-        "subheading": "THE RITUAL",
-        "heading": "Objects for the skin. Relics for the altar.",
-        "body": "<p>halfholy is a beauty house built on ceremony. We make everyday relics — products that live on the skin as sensation and objects designed to be used, kept, and looked at.</p>",
-        "button_label": "EXPLORE COLLECTION",
-        "button_link": "/collections/all"
-      }
-    },
-    "lookbook": {
-      "type": "editorial-lookbook",
-      "blocks": {
-        "look_1": {
-          "type": "image",
-          "settings": { "caption": "THE ALTAR" }
-        },
-        "look_2": {
-          "type": "image",
-          "settings": { "caption": "DEVOTION" }
-        },
-        "look_3": {
-          "type": "image",
-          "settings": { "caption": "RELIC NO. 1" }
-        }
-      },
-      "block_order": [
-        "look_1",
-        "look_2",
-        "look_3"
-      ],
-      "settings": {
-        "heading": "CAMPAIGN ARCHIVE"
-      }
     }
   },
   "order": [
     "hero",
-    "dummy_white",
-    "split_editorial",
-    "lookbook"
+    "dummy_white"
   ]
 }
